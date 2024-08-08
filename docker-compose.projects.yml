@@ -144,7 +144,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
       - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
       - SOCK_PORT=${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}
-      - RSA_PR_KEY=${SSL_KEY:?err}
+      - RSA_PR_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
 
       - MYSQL_BE_HOST=database
       - MYSQL_BE_PASSWORD=${MYSQL_PASSWORD:?err}
