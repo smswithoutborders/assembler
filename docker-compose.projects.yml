@@ -3,7 +3,7 @@ services:
     restart: always
     container_name: vault
     depends_on:
-      mysql:
+      database:
         condition: service_healthy
     build:
       context: ${VAULT_PATH}
@@ -103,7 +103,7 @@ services:
     restart: always
     container_name: gateway_server
     depends_on:
-      mysql:
+      database:
         condition: service_healthy
       rmq:
         condition: service_healthy
