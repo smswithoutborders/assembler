@@ -1,0 +1,338 @@
+services:
+  vault:
+    restart: always
+    container_name: vault
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      context: ${VAULT_PATH}
+      dockerfile: Dockerfile
+      target: production
+    volumes:
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+      - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
+      - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
+      - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
+      - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
+      - ${BROADCAST_WHITELIST:?err}:/usr/local/share/smswithoutborders/broadcast_list
+      - ${KEYSTORE_PATH:?err}:/usr/local/share/smswithoutborders/keystore
+    environment:
+      - HOST=${VAULT_HTTP_HOST:?err}
+      - PORT=${VAULT_HTTP_PORT:?err}
+      - ORIGINS=["https://${HOMEPAGE_HTTP_HOST}"]
+
+      - GRPC_HOST=${VAULT_gRPC_HOST:?err}
+      - GRPC_PORT=${VAULT_gRPC_PORT:?err}
+      - GRPC_SSL_PORT=${VAULT_gRPC_TLS_PORT:?err}
+      - GRPC_INTERNAL_PORT=${VAULT_gRPC_INTERNAL_PORT:?err}
+      - GRPC_INTERNAL_SSL_PORT=${VAULT_gRPC_TLS_INTERNAL_PORT:?err}
+
+      - SSL_SERVER_NAME=${VAULT_HTTP_HOST:?err}
+      - SSL_PORT=${VAULT_HTTPS_PORT:?err}
+      - SSL_CERTIFICATE=${SSL_CERTIFICATE_FILE:?err}
+      - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
+      - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
+
+      - SHARED_KEY=/usr/local/share/smswithoutborders/sharedkey.key
+      - HASHING_SALT=/usr/local/share/smswithoutborders/hashingsalt.key
+      - BROADCAST_WHITELIST=/usr/local/share/smswithoutborders/broadcast_list
+
+      - MYSQL_HOST=database
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:?err}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:?err}
+      - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID}
+      - MOCK_OTP=${MOCK_OTP}
+
+      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+      - ENABLE_RECAPTCHA=${ENABLE_RECAPTCHA:?err}
+
+      - GMAIL_CREDENTIALS=/usr/local/share/smswithoutborders/gmail_credentials.json
+      - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
+      - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
+      - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
+      - KEYSTORE_PATH=/usr/local/share/smswithoutborders/keystore"
+    networks:
+      - assembler_network
+
+  homepage:
+    restart: always
+    container_name: homepage
+    depends_on:
+      - vault
+    build:
+      context: ${HOMEPAGE_PATH}
+      dockerfile: Dockerfile
+      target: production
+      args:
+        - SWOB_BE_HOST=https://${VAULT_HTTP_HOST}:${VAULT_HTTPS_PORT}
+        - SWOB_GS_HOST=https://${GATEWAY_SERVER_HTTP_HOST}:${GATEWAY_SERVER_HTTPS_PORT}
+        - SWOB_RECAPTCHA_ENABLE=${ENABLE_RECAPTCHA}
+        - SWOB_RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
+        - SWOB_SSL_CRT_FILE=${SSL_CERTIFICATE_FILE:?err}
+        - SWOB_SSL_KEY_FILE=${SSL_CERTIFICATE_KEY_FILE:?err}
+        - SWOB_SSL_ENABLE=true
+    volumes:
+      - ${SSL_CERTIFICATE_FILE:?err}:/usr/local/apache2/conf/server.crt
+      - ${SSL_CERTIFICATE_KEY_FILE:?err}:/usr/local/apache2/conf/server.key
+      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/usr/local/apache2/conf/server.pem
+    networks:
+      - assembler_network
+
+  telemetry_homepage:
+    restart: always
+    container_name: telemetry_homepage
+    depends_on:
+      - vault
+    build:
+      context: ${TELEMETRY_HOMEPAGE_PATH}
+      dockerfile: Dockerfile
+      target: production
+    volumes:
+      - ${SSL_CERTIFICATE_FILE:?err}:/usr/local/apache2/conf/server.crt
+      - ${SSL_CERTIFICATE_KEY_FILE:?err}:/usr/local/apache2/conf/server.key
+      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/usr/local/apache2/conf/server.pem
+    networks:
+      - assembler_network
+
+  gateway_server:
+    restart: always
+    container_name: gateway_server
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rmq:
+        condition: service_healthy
+    build:
+      context: ${GATEWAY_SERVER_PATH}
+      dockerfile: Dockerfile
+      args:
+        - HOST=${GATEWAY_SERVER_HTTP_HOST:?err}
+        - PORT=${GATEWAY_SERVER_HTTP_PORT:?err}
+        - SSL_PORT=${GATEWAY_SERVER_HTTPS_PORT:?err}
+        - SSL_CERTIFICATE=${SSL_CERTIFICATE_FILE:?err}
+        - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
+        - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
+    volumes:
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+      - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
+      - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
+      - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
+      - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
+      - ${GATEWAY_SERVER_FTP_DIRECTORY:?err}:/usr/local/share/smswithoutborders/ftp_directory
+    environment:
+      - ORIGINS=["https://${HOMEPAGE_HTTP_HOST}"]
+
+      - HOST=${GATEWAY_SERVER_HTTP_HOST:?err}
+      - PORT=${GATEWAY_SERVER_HTTP_PORT:?err}
+
+      - SSL_PORT=${GATEWAY_SERVER_HTTPS_PORT:?err}
+      - SSL_CERTIFICATE=${SSL_CERTIFICATE_FILE:?err}
+      - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
+      - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
+
+      - PUBLISHER_GRPC_HOST=${PUBLISHER_gRPC_HOST:?err}
+      - PUBLISHER_GRPC_PORT=${PUBLISHER_gRPC_PORT:?err}
+      - PUBLISHER_GRPC_SSL_PORT=${PUBLISHER_gRPC_TLS_PORT:?err}
+
+      - MYSQL_HOST=database
+      - MYSQL_USER=${MYSQL_USER:?err}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
+      - SOCK_PORT=${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}
+      - RSA_PR_KEY=${SSL_KEY:?err}
+
+      - MYSQL_BE_HOST=database
+      - MYSQL_BE_PASSWORD=${MYSQL_PASSWORD:?err}
+      - MYSQL_BE_DATABASE=${MYSQL_DATABASE:?err}
+
+      - RMQ_HOST=${RMQ_HOST:-rmq}
+      # - RMQ_SSL=${RMQ_SSL:-false}
+      - RMQ_SSL=false
+
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS:-guest}
+
+      - PUBLISHER_ENCRYPTION_KEY=${PUBLISHER_ENCRYPTION_KEY:?err}
+
+      - RMQ_ROUTING_KEY=${RMQ_ROUTING_KEY:-staging-smswithoutborders-routing-key}
+      - RMQ_EXCHANGE=${RMQ_EXCHANGE:-staging-smswithoutborders-exchange}
+      - RMQ_CONNECTION_NAME=${RMQ_CONNECTION_NAME:-staging-smswithoutborders-publisher}
+      - RMQ_QUEUE_NAME=${RMQ_QUEUE_NAME:-staging-smswithoutborders-queue}
+
+      - IMAP_SERVER=${GATEWAY_SERVER_IMAP_SERVER:?err}
+      - IMAP_PORT=${GATEWAY_SERVER_IMAP_PORT:-993}
+      - IMAP_USERNAME=${GATEWAY_SERVER_IMAP_USERNAME:?err}
+      - IMAP_PASSWORD=${GATEWAY_SERVER_IMAP_PASSWORD:?err}
+      - MAIL_FOLDER=${GATEWAY_SERVER_MAIL_FOLDER:-INBOX}
+
+      - FTP_USERNAME=${GATEWAY_SERVER_FTP_USERNAME:?err}
+      - FTP_PASSWORD=${GATEWAY_SERVER_FTP_PASSWORD:?err}
+      - FTP_IP_ADDRESS=${GATEWAY_SERVER_FTP_IP_ADDRESS:?err}
+      - FTP_PORT=${GATEWAY_SERVER_FTP_PORT:?err}
+      - FTP_PASSIVE_PORTS=${GATEWAY_SERVER_FTP_PASSIVE_PORTS:?err}
+      - FTP_MAX_CON=${GATEWAY_SERVER_FTP_MAX_CON:?err}
+      - FTP_MAX_CON_PER_IP=${GATEWAY_SERVER_FTP_MAX_CON_PER_IP:?err}
+      - FTP_DIRECTORY=${GATEWAY_SERVER_FTP_DIRECTORY:?err}
+
+      - DEKU_CLOUD_URL=${DEKU_CLOUD_URL:?err}
+      - DEKU_CLOUD_PROJECT_REF=${DEKU_CLOUD_PROJECT_REF:?err}
+      - DEKU_CLOUD_SERVICE_ID=${DEKU_CLOUD_SERVICE_ID:?err}
+      - DEKU_CLOUD_ACCOUNT_SID=${DEKU_CLOUD_ACCOUNT_SID:?err}
+      - DEKU_CLOUD_AUTH_TOKEN=${DEKU_CLOUD_AUTH_TOKEN:?err}
+
+      - GMAIL_CREDENTIALS=/usr/local/share/smswithoutborders/gmail_credentials.json
+      - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
+      - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
+
+      - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
+
+      - SHARED_KEY=/usr/local/share/smswithoutborders/sharedkey.key
+      - HASHING_SALT=/usr/local/share/smswithoutborders/hashingsalt.key
+    networks:
+      - assembler_network
+
+  gateway_server_sync_socket:
+    restart: always
+    container_name: gateway_server_sync_socket
+    build: ${GATEWAY_SERVER_PATH}/sockets/.
+    volumes:
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
+    environment:
+      - HOST=${GATEWAY_SERVER_HTTP_HOST:?err}
+      - PORT=${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}
+
+      - GATEWAY_SERVER_HOST=${GATEWAY_SERVER_HTTP_HOST:?err}
+      - GATEWAY_SERVER_PORT=${GATEWAY_SERVER_HTTP_PORT:?err}
+      - GATEWAY_SERVER_SSL_PORT=${GATEWAY_SERVER_HTTPS_PORT:?err}
+
+      - SSL_CRT=${SSL_CERTIFICATE_FILE:?err}
+      - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
+      - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
+    networks:
+      - assembler_network
+
+  publisher:
+    restart: always
+    container_name: publisher
+    depends_on:
+      rmq:
+        condition: service_healthy
+    build:
+      context: ${PUBLISHER_PATH}
+      dockerfile: Dockerfile
+    volumes:
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+      - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
+      - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
+    environment:
+      - GRPC_HOST=${PUBLISHER_gRPC_HOST:?err}
+      - GRPC_PORT=${PUBLISHER_gRPC_PORT:?err}
+      - GRPC_SSL_PORT=${PUBLISHER_gRPC_TLS_PORT:?err}
+
+      - SSL_CERTIFICATE=${SSL_CERTIFICATE_FILE:?err}
+      - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
+      - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
+
+      - VAULT_GRPC_HOST=${VAULT_gRPC_HOST:?err}
+      - VAULT_GRPC_PORT=${VAULT_gRPC_PORT:?err}
+      - VAULT_GRPC_SSL_PORT=${VAULT_gRPC_TLS_PORT:?err}
+      - VAULT_GRPC_INTERNAL_PORT=${VAULT_gRPC_INTERNAL_PORT:?err}
+      - VAULT_GRPC_INTERNAL_SSL_PORT=${VAULT_gRPC_TLS_INTERNAL_PORT:?err}
+
+      - PUBLISHER_DECRYPTION_KEY=${PUBLISHER_ENCRYPTION_KEY:?err}
+
+      - RMQ_USER=${RABBITMQ_DEFAULT_USER:-guest}
+      - RMQ_PASSWORD=${RABBITMQ_DEFAULT_PASS:-guest}
+      - RMQ_HOST=${RMQ_HOST:-rmq}
+      - RMQ_QUEUE_NAME=${RMQ_QUEUE_NAME:-staging-smswithoutborders-queue}
+      - RMQ_ROUTING_KEY=${RMQ_ROUTING_KEY:-staging-smswithoutborders-routing-key}
+      - RMQ_EXCHANGE=${RMQ_EXCHANGE:-staging-smswithoutborders-exchange}
+      - RMQ_CONNECTION_NAME=${RMQ_CONNECTION_NAME:-staging-smswithoutborders-consumer}
+
+      - GMAIL_CREDENTIALS=/usr/local/share/smswithoutborders/gmail_credentials.json
+      - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
+      - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
+      - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
+    networks:
+      - assembler_network
+
+  gateway_client_remote:
+    restart: always
+    container_name: gateway_client_remote
+    depends_on:
+      - gateway_server
+    build:
+      context: ${GATEWAY_CLIENT_REMOTE_PATH}
+      dockerfile: Dockerfile
+    volumes:
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+    environment:
+      - SERVER_NAME=${GATEWAY_CLIENT_REMOTE_HTTP_HOST:?err}
+      - PORT=${GATEWAY_CLIENT_REMOTE_HTTP_PORT:?err}
+      - HTTPS_PORT=${GATEWAY_CLIENT_REMOTE_HTTPS_PORT:?err}
+
+      - SSL_CERTIFICATE_FILE=${SSL_CERTIFICATE_FILE:?err}
+      - SSL_CERTIFICATE_KEY_FILE=${SSL_CERTIFICATE_KEY_FILE:?err}
+      - SSL_CERTIFICATE_CHAIN_FILE=${SSL_CERTIFICATE_CHAIN_FILE:?err}
+
+      - GATEWAY_SERVER_HOST=https://${GATEWAY_SERVER_HTTP_HOST}
+      - GATEWAY_SERVER_PORT=${GATEWAY_SERVER_HTTPS_PORT:?err}
+    networks:
+      - assembler_network
+
+  database:
+    restart: always
+    container_name: database
+    image: mariadb:11.4
+    volumes:
+      - db-data:/var/lib/mysql:Z
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    healthcheck:
+      test: "mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD:?err} -e \"show databases\""
+      interval: 1s
+      retries: 120
+    networks:
+      - assembler_network
+
+  rmq:
+    restart: always
+    container_name: rmq
+    hostname: rmq-server
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    build:
+      context: ${RMQ_PATH}
+      dockerfile: Dockerfile
+    volumes:
+      - "${SSL_CERTIFICATES_PATH:?err}:/etc/ssl/certs/smswithoutborders/:Z"
+      - rmq-data:/var/lib/rabbitmq/mnesia/
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS:-guest}
+    networks:
+      - assembler_network
+
+volumes:
+  db-data:
+  rmq-data:
+
+
+networks:
+  assembler_network:
+    driver: bridge

@@ -1,0 +1,28 @@
+services:
+  nginx_proxy_manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx_proxy_manager
+    restart: always
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - npm_data:/data
+      - ${SSL_CERTIFICATES_PATH:?err}:/etc/letsencrypt
+    environment:
+      - DB_MYSQL_HOST=database
+      - DB_MYSQL_PORT=3306
+      - DB_MYSQL_USER=${MYSQL_USER}
+      - DB_MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - DB_MYSQL_NAME="nginx_proxy_manager"
+    networks:
+      - assembler_network
+
+volumes:
+  npm_data:
+
+
+networks:
+  assembler_network:
+    driver: bridge
