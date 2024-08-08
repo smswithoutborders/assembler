@@ -9,10 +9,10 @@ else
     exit 1
 fi
 
-source ./.env.default
+export $(grep -v '^#' ./.env.default | xargs)
 
 if [ -f ./.env ]; then
-    source ./.env
+    export $(grep -v '^#' ./.env | xargs)
 fi
 
 if [ -z "$PROJECT_NAME" ]; then
