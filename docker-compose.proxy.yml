@@ -4,7 +4,7 @@ services:
     container_name: nginx-proxy-manager
     restart: always
     depends_on:
-      - npm_database
+      - npm-database
     ports:
       - "80:80"
       # - "81:81" # Admin Web Port
