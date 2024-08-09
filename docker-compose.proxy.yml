@@ -1,13 +1,13 @@
 services:
-  nginx_proxy_manager:
+  nginx-proxy-manager:
     image: jc21/nginx-proxy-manager:latest
-    container_name: nginx_proxy_manager
+    container_name: nginx-proxy-manager
     restart: always
     depends_on:
       - npm_database
     ports:
       - "80:80"
-      - "81:81"
+      # - "81:81" # Admin Web Port
       - "443:443"
     volumes:
       - npm_data:/data
@@ -21,9 +21,9 @@ services:
     networks:
       - assembler_network
 
-  npm_database:
+  npm-database:
     restart: unless-stopped
-    container_name: npm_database
+    container_name: npm-database
     image: mariadb:11.4
     volumes:
       - npm_db_data:/var/lib/mysql
@@ -35,8 +35,9 @@ services:
       - MYSQL_DATABASE=${NGINX_PROXY_MANAGER_DATABASE}
     healthcheck:
       test: "mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD:?err} -e \"show databases\""
-      interval: 1s
-      retries: 120
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - assembler_network
 

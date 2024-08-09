@@ -90,10 +90,10 @@ if [ -n "$TARGET_REPO" ]; then
 
     export "${TARGET_REPO^^}_PATH=$PROJECTS_DIR/$TARGET_REPO"
 
-    echo "Deploying project: $TARGET_REPO"
-    echo "Running command: $DOCKER_COMPOSE_CMD up --build -d $TARGET_REPO"
+    echo "Deploying project: ${TARGET_REPO//_/-}"
+    echo "Running command: $DOCKER_COMPOSE_CMD up --build -d ${TARGET_REPO//_/-}"
     if ! $DOCKER_COMPOSE_CMD up --build -d $TARGET_REPO; then
-        echo "Error: Docker Compose failed for project $TARGET_REPO."
+        echo "Error: Docker Compose failed for project ${TARGET_REPO//_/-}."
         exit 1
     fi
 else

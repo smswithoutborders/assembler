@@ -99,9 +99,9 @@ services:
     networks:
       - assembler_network
 
-  gateway_server:
+  gateway-server:
     restart: always
-    container_name: gateway_server
+    container_name: gateway-server
     depends_on:
       database:
         condition: service_healthy
@@ -196,9 +196,9 @@ services:
     networks:
       - assembler_network
 
-  gateway_server_sync_socket:
+  gateway-server-sync-socket:
     restart: always
-    container_name: gateway_server_sync_socket
+    container_name: gateway-server-sync-socket
     build: ${GATEWAY_SERVER_PATH}/sockets/.
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
@@ -261,7 +261,7 @@ services:
     networks:
       - assembler_network
 
-  gateway_client_remote:
+  gateway-client-remote:
     restart: always
     container_name: gateway_client_remote
     depends_on:
@@ -290,7 +290,7 @@ services:
     container_name: database
     image: mariadb:11.4
     volumes:
-      - db_data:/var/lib/mysql
+      - db-data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -318,7 +318,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - "${SSL_CERTIFICATES_PATH:?err}:/etc/ssl/certs/smswithoutborders/:Z"
-      - rmq_data:/var/lib/rabbitmq/mnesia/
+      - rmq-data:/var/lib/rabbitmq/mnesia/
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
       interval: 30s
@@ -331,8 +331,8 @@ services:
       - assembler_network
 
 volumes:
-  db_data:
-  rmq_data:
+  db-data:
+  rmq-data:
 
 
 networks:
