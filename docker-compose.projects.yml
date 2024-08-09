@@ -1,6 +1,6 @@
 services:
   vault:
-    restart: always
+    restart: unless-stopped
     container_name: vault
     depends_on:
       database:
@@ -60,7 +60,7 @@ services:
       - assembler_network
 
   homepage:
-    restart: always
+    restart: unless-stopped
     container_name: homepage
     depends_on:
       - vault
@@ -84,7 +84,7 @@ services:
       - assembler_network
 
   telemetry-homepage:
-    restart: always
+    restart: unless-stopped
     container_name: telemetry-homepage
     depends_on:
       - vault
@@ -100,7 +100,7 @@ services:
       - assembler_network
 
   gateway-server:
-    restart: always
+    restart: unless-stopped
     container_name: gateway-server
     depends_on:
       database:
@@ -197,7 +197,7 @@ services:
       - assembler_network
 
   gateway-server-sync-socket:
-    restart: always
+    restart: unless-stopped
     container_name: gateway-server-sync-socket
     build: ${GATEWAY_SERVER_PATH}/sockets/.
     volumes:
@@ -217,7 +217,7 @@ services:
       - assembler_network
 
   publisher:
-    restart: always
+    restart: unless-stopped
     container_name: publisher
     depends_on:
       rmq:
@@ -262,8 +262,8 @@ services:
       - assembler_network
 
   gateway-client-remote:
-    restart: always
-    container_name: gateway_client_remote
+    restart: unless-stopped
+    container_name: gateway-client-remote
     depends_on:
       - gateway-server
     build:
@@ -286,7 +286,7 @@ services:
       - assembler_network
 
   database:
-    restart: always
+    restart: unless-stopped
     container_name: database
     image: mariadb:11.4
     volumes:
@@ -306,7 +306,7 @@ services:
       - assembler_network
 
   rmq:
-    restart: always
+    restart: unless-stopped
     container_name: rmq
     hostname: rmq-server
     logging:
@@ -320,7 +320,7 @@ services:
       - "${SSL_CERTIFICATES_PATH:?err}:/etc/ssl/certs/smswithoutborders/:Z"
       - rmq-data:/var/lib/rabbitmq/mnesia/
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      test: [ "CMD", "curl", "-f", "http://rmq:15672" ]
       interval: 30s
       timeout: 10s
       retries: 5
