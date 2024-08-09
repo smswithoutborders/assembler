@@ -3,6 +3,8 @@ services:
     image: jc21/nginx-proxy-manager:latest
     container_name: nginx_proxy_manager
     restart: always
+    depends_on:
+      - npm_database
     ports:
       - "80:80"
       - "81:81"
@@ -11,16 +13,36 @@ services:
       - npm_data:/data
       - ${SSL_CERTIFICATES_PATH:?err}:/etc/letsencrypt
     environment:
-      - DB_MYSQL_HOST=database
+      - DB_MYSQL_HOST=npm_database
       - DB_MYSQL_PORT=3306
-      - DB_MYSQL_USER=${MYSQL_USER}
-      - DB_MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - DB_MYSQL_NAME="nginx_proxy_manager"
+      - DB_MYSQL_USER=${MYSQL_USER:?err}
+      - DB_MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
+      - DB_MYSQL_NAME=${NGINX_PROXY_MANAGER_DATABASE:?err}
+    networks:
+      - assembler_network
+
+  npm_database:
+    restart: unless-stopped
+    container_name: npm_database
+    image: mariadb:11.4
+    volumes:
+      - npm_db_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${NGINX_PROXY_MANAGER_DATABASE}
+    healthcheck:
+      test: "mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD:?err} -e \"show databases\""
+      interval: 1s
+      retries: 120
     networks:
       - assembler_network
 
 volumes:
   npm_data:
+  npm_db_data:
 
 
 networks:

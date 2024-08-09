@@ -290,16 +290,18 @@ services:
     container_name: database
     image: mariadb:11.4
     volumes:
-      - db-data:/var/lib/mysql:Z
+      - db_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     healthcheck:
       test: "mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD:?err} -e \"show databases\""
-      interval: 1s
-      retries: 120
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - assembler_network
 
@@ -316,7 +318,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - "${SSL_CERTIFICATES_PATH:?err}:/etc/ssl/certs/smswithoutborders/:Z"
-      - rmq-data:/var/lib/rabbitmq/mnesia/
+      - rmq_data:/var/lib/rabbitmq/mnesia/
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
       interval: 30s
@@ -329,8 +331,8 @@ services:
       - assembler_network
 
 volumes:
-  db-data:
-  rmq-data:
+  db_data:
+  rmq_data:
 
 
 networks:
