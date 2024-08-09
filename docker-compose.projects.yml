@@ -317,9 +317,9 @@ services:
       context: ${RMQ_PATH}
       dockerfile: Dockerfile
     volumes:
-      - ${SSL_CERTIFICATE_FILE:?err}=/etc/ssl/certs/smswithoutborders/server.crt:Z
-      - ${SSL_CERTIFICATE_KEY_FILE:?err}=/etc/ssl/certs/smswithoutborders/server.key:Z
-      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}=/etc/ssl/certs/smswithoutborders/server.pem:Z
+      - ${SSL_CERTIFICATE_FILE:?err}=/etc/ssl/certs/smswithoutborders/server.crt:ro
+      - ${SSL_CERTIFICATE_KEY_FILE:?err}=/etc/ssl/certs/smswithoutborders/server.key:ro
+      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}=/etc/ssl/certs/smswithoutborders/server.pem:ro
       - rmq-data:/var/lib/rabbitmq/mnesia/
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
