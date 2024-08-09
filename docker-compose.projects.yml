@@ -265,7 +265,7 @@ services:
     restart: always
     container_name: gateway_client_remote
     depends_on:
-      - gateway_server
+      - gateway-server
     build:
       context: ${GATEWAY_CLIENT_REMOTE_PATH}
       dockerfile: Dockerfile
