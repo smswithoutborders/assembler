@@ -13,7 +13,7 @@ services:
       - npm_data:/data
       - ${SSL_CERTIFICATES_PATH:?err}:/etc/letsencrypt
     environment:
-      - DB_MYSQL_HOST=npm_database
+      - DB_MYSQL_HOST=npm-database
       - DB_MYSQL_PORT=3306
       - DB_MYSQL_USER=${MYSQL_USER:?err}
       - DB_MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
