@@ -21,16 +21,19 @@ if [ ! -d "$ssl_certs" ]; then
     exit 1
 fi
 
+echo "Copying $LETSENCRYPT_CERTIFICATE_FILE from $letsencrypt_live to $ssl_certs/$DESTINATION_CERTIFICATE_FILE..."
 if ! cp -fL "$letsencrypt_live/$LETSENCRYPT_CERTIFICATE_FILE" "$ssl_certs/$DESTINATION_CERTIFICATE_FILE"; then
     echo "ERROR: Failed to copy $LETSENCRYPT_CERTIFICATE_FILE to $ssl_certs/$DESTINATION_CERTIFICATE_FILE"
     exit 1
 fi
 
+echo "Copying $LETSENCRYPT_CERTIFICATE_KEY_FILE from $letsencrypt_live to $ssl_certs/$DESTINATION_CERTIFICATE_KEY_FILE..."
 if ! cp -fL "$letsencrypt_live/$LETSENCRYPT_CERTIFICATE_KEY_FILE" "$ssl_certs/$DESTINATION_CERTIFICATE_KEY_FILE"; then
     echo "ERROR: Failed to copy $LETSENCRYPT_CERTIFICATE_KEY_FILE to $ssl_certs/$DESTINATION_CERTIFICATE_KEY_FILE"
     exit 1
 fi
 
+echo "Copying $LETSENCRYPT_CERTIFICATE_CHAIN_FILE from $letsencrypt_live to $ssl_certs/$DESTINATION_CERTIFICATE_CHAIN_FILE..."
 if ! cp -fL "$letsencrypt_live/$LETSENCRYPT_CERTIFICATE_CHAIN_FILE" "$ssl_certs/$DESTINATION_CERTIFICATE_CHAIN_FILE"; then
     echo "ERROR: Failed to copy $LETSENCRYPT_CERTIFICATE_CHAIN_FILE to $ssl_certs/$DESTINATION_CERTIFICATE_CHAIN_FILE"
     exit 1
