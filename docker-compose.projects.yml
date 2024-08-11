@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
       target: production
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
@@ -118,7 +118,7 @@ services:
         - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
         - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
       - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
@@ -226,7 +226,7 @@ services:
       context: ${PUBLISHER_PATH}
       dockerfile: Dockerfile
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
     environment:
@@ -270,7 +270,7 @@ services:
       context: ${GATEWAY_CLIENT_REMOTE_PATH}
       dockerfile: Dockerfile
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:Z
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
     environment:
       - SERVER_NAME=${GATEWAY_CLIENT_REMOTE_HTTP_HOST:?err}
       - PORT=${GATEWAY_CLIENT_REMOTE_HTTP_PORT:?err}
@@ -293,15 +293,22 @@ services:
       - db-data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MARIADB_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MARIADB_USER=${MYSQL_USER}
+      - MARIADB_PASSWORD=${MYSQL_PASSWORD}
+      - MARIADB_DATABASE=${MYSQL_DATABASE}
     healthcheck:
-      test: "mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD:?err} -e \"show databases\""
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - assembler_network
 
