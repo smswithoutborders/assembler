@@ -11,7 +11,7 @@ services:
       - "443:443"
     volumes:
       - npm_data:/data
-      - ${SSL_CERTIFICATES_PATH:?err}:/etc/letsencrypt
+      - npm_letsencrypt:/etc/letsencrypt
     environment:
       - DB_MYSQL_HOST=npm-database
       - DB_MYSQL_PORT=3306
@@ -27,7 +27,6 @@ services:
     image: mariadb:11.4
     volumes:
       - npm_db_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
@@ -44,6 +43,7 @@ services:
 volumes:
   npm_data:
   npm_db_data:
+  npm_letsencrypt:
 
 
 networks:

@@ -150,7 +150,6 @@ drop)
     PROXY_FLAG=""
     MANAGEMENT_FLAG=""
     REMOVE_IMAGES_FLAG=""
-    TARGET_REPO=""
 
     while [[ "$1" =~ ^-- ]]; do
         case $1 in
@@ -167,7 +166,7 @@ drop)
             shift
             ;;
         *)
-            handle_error "Unknown option: $1 for deploy command."
+            handle_error "Unknown option: $1 for drop command."
             ;;
         esac
     done
