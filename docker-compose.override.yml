@@ -2,7 +2,7 @@ services:
   vault:
     ports:
       - ${VAULT_HTTP_PORT:?err}:${VAULT_HTTP_PORT:?err}
-      - ${VAULT_HTTP_HOST:?err}:${VAULT_HTTP_HOST:?err}
+      - ${VAULT_HTTPS_PORT:?err}:${VAULT_HTTPS_PORT:?err}
       - ${VAULT_gRPC_PORT:?err}:${VAULT_gRPC_PORT:?err}
       - ${VAULT_gRPC_TLS_PORT:?err}:${VAULT_gRPC_TLS_PORT:?err}
 
