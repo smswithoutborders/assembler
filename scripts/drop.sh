@@ -46,6 +46,11 @@ while [[ "$1" =~ ^-- ]]; do
         REMOVE_IMAGES=true
         shift
         ;;
+    --project)
+        shift
+        TARGET_REPO=$1
+        shift
+        ;;
     *)
         echo "Error: Unknown option: $1"
         exit 1
@@ -82,10 +87,18 @@ else
     DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD -f $OVERRIDE_COMPOSE_FILE"
 fi
 
-REMOVE_CMD="$DOCKER_COMPOSE_CMD down"
+target_name="${TARGET_REPO//_/-}"
+REMOVE_CMD="$DOCKER_COMPOSE_CMD down $target_name"
+
 if [ "$REMOVE_IMAGES" = true ]; then
     REMOVE_CMD="$REMOVE_CMD --rmi all"
 fi
+
+for dir in "$PROJECTS_DIR"/*/; do
+    repo_name=$(basename "$dir")
+    echo "- $repo_name"
+    export "${repo_name^^}_PATH=$dir"
+done
 
 echo "Running command: $REMOVE_CMD"
 if ! $REMOVE_CMD; then

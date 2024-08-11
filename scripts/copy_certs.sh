@@ -17,8 +17,11 @@ if [ ! -d "$letsencrypt_live" ]; then
 fi
 
 if [ ! -d "$ssl_certs" ]; then
-    echo "ERROR: SSL certs destination directory not found: $ssl_certs"
-    exit 1
+    echo "SSL certs destination directory not found: $ssl_certs. Creating it..."
+    if ! mkdir -p "$ssl_certs"; then
+        echo "ERROR: Failed to create destination directory: $ssl_certs"
+        exit 1
+    fi
 fi
 
 echo "Copying $LETSENCRYPT_CERTIFICATE_FILE from $letsencrypt_live to $ssl_certs/$DESTINATION_CERTIFICATE_FILE..."

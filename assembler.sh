@@ -11,7 +11,7 @@ show_help() {
     echo ""
     echo "Options:"
     echo "  --branch BRANCH    Specify a branch for cloning/updating (optional for clone)"
-    echo "  --project PROJECT  Specify a project to clone/update or deploy (optional for clone, deploy)"
+    echo "  --project PROJECT  Specify a project to clone/update or deploy (optional for clone, deploy, drop)"
     echo "  --proxy            Use reverse proxy (optional for deploy)"
     echo "  --management       Include management tools (optional for deploy, drop)"
     echo "  --letsencrypt DOMAIN Specify the Let's Encrypt domain name (required for certs)"
@@ -150,6 +150,7 @@ drop)
     PROXY_FLAG=""
     MANAGEMENT_FLAG=""
     REMOVE_IMAGES_FLAG=""
+    TARGET_REPO=""
 
     while [[ "$1" =~ ^-- ]]; do
         case $1 in
@@ -165,6 +166,14 @@ drop)
             REMOVE_IMAGES_FLAG="--remove-images"
             shift
             ;;
+        --project)
+            shift
+            if [[ -z "$1" || "$1" =~ ^-- ]]; then
+                handle_error "Project name is required after --project."
+            fi
+            TARGET_REPO=$1
+            shift
+            ;;
         *)
             handle_error "Unknown option: $1 for drop command."
             ;;
@@ -173,7 +182,7 @@ drop)
 
     check_for_extra_arguments "$@"
 
-    ./scripts/drop.sh $PROXY_FLAG $MANAGEMENT_FLAG $REMOVE_IMAGES_FLAG
+    ./scripts/drop.sh ${TARGET_REPO:+--project $TARGET_REPO} $PROXY_FLAG $MANAGEMENT_FLAG $REMOVE_IMAGES_FLAG
     ;;
 *)
     handle_error "Unknown command: $COMMAND."

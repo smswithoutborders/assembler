@@ -82,38 +82,27 @@ else
     DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD -f $OVERRIDE_COMPOSE_FILE"
 fi
 
+project_dirs=()
+for dir in "$PROJECTS_DIR"/*/; do
+    repo_name=$(basename "$dir")
+    project_dirs+=("$repo_name")
+    export "${repo_name^^}_PATH=$dir"
+done
+
+target_name="${TARGET_REPO//_/-}"
 if [ -n "$TARGET_REPO" ]; then
-    if [ ! -d "$PROJECTS_DIR/$TARGET_REPO" ]; then
-        echo "Error: Project directory $TARGET_REPO not found in $PROJECTS_DIR."
-        exit 1
-    fi
-
-    export "${TARGET_REPO^^}_PATH=$PROJECTS_DIR/$TARGET_REPO"
-
-    echo "Deploying project: ${TARGET_REPO//_/-}"
-    echo "Running command: $DOCKER_COMPOSE_CMD up --build -d ${TARGET_REPO//_/-}"
-    if ! $DOCKER_COMPOSE_CMD up --build -d $TARGET_REPO; then
-        echo "Error: Docker Compose failed for project ${TARGET_REPO//_/-}."
-        exit 1
-    fi
+    echo "Deploying project: $target_name"
 else
-    echo "Deploying all projects."
-    if [ -z "$(ls -A "$PROJECTS_DIR"/*/ 2>/dev/null)" ]; then
-        echo "Error: No projects found in $PROJECTS_DIR. Clone projects before deploying."
-        exit 1
-    fi
-
-    for dir in "$PROJECTS_DIR"/*/; do
-        repo_name=$(basename "$dir")
-        echo "- $repo_name"
-        export "${repo_name^^}_PATH=$PROJECTS_DIR/$repo_name"
+    echo "Deploying all projects in $PROJECTS_DIR:"
+    for repo in "${project_dirs[@]}"; do
+        echo "- $repo"
     done
+fi
 
-    echo "Running command: $DOCKER_COMPOSE_CMD up --build -d"
-    if ! $DOCKER_COMPOSE_CMD up --build -d; then
-        echo "Error: Docker Compose failed."
-        exit 1
-    fi
+echo "Running command: $DOCKER_COMPOSE_CMD up --build -d $target_name"
+if ! $DOCKER_COMPOSE_CMD up --build -d $target_name; then
+    echo "Error: Docker Compose failed."
+    exit 1
 fi
 
 echo "Deployment completed successfully."
