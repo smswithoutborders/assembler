@@ -94,3 +94,4 @@ if ! $REMOVE_CMD; then
 fi
 
 echo "Drop operation completed successfully."
+exit 0
