@@ -1,0 +1,42 @@
+services:
+  vault:
+    ports:
+      - ${VAULT_HTTP_PORT:?err}:${VAULT_HTTP_PORT:?err}
+      - ${VAULT_HTTP_HOST:?err}:${VAULT_HTTP_HOST:?err}
+      - ${VAULT_gRPC_PORT:?err}:${VAULT_gRPC_PORT:?err}
+      - ${VAULT_gRPC_TLS_PORT:?err}:${VAULT_gRPC_TLS_PORT:?err}
+
+  homepage:
+    ports:
+      - ${HOMEPAGE_HTTP_PORT:?err}:${HOMEPAGE_HTTP_PORT:?err}
+      - ${HOMEPAGE_HTTPS_PORT:?err}:${HOMEPAGE_HTTPS_PORT:?err}
+
+  telemetry-homepage:
+    ports:
+      - ${TELEMETRY_HOMEPAGE_HTTP_PORT:?err}:${TELEMETRY_HOMEPAGE_HTTP_PORT:?err}
+      - ${TELEMETRY_HOMEPAGE_HTTPS_PORT:?err}:${TELEMETRY_HOMEPAGE_HTTPS_PORT:?err}
+
+  gateway-server:
+    ports:
+      - ${GATEWAY_SERVER_HTTP_PORT:?err}:${GATEWAY_SERVER_HTTP_PORT:?err}
+      - ${GATEWAY_SERVER_HTTPS_PORT:?err}:${GATEWAY_SERVER_HTTPS_PORT:?err}
+      - ${GATEWAY_SERVER_FTP_PORT:?err}:${GATEWAY_SERVER_FTP_PORT:?err}
+      - ${GATEWAY_SERVER_FTP_PASSIVE_PORTS:?err}:${GATEWAY_SERVER_FTP_PASSIVE_PORTS:?err}
+
+  gateway-server-sync-socket:
+    ports:
+      - ${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}:${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}
+
+  publisher:
+    ports:
+      - ${PUBLISHER_gRPC_PORT:?err}:${PUBLISHER_gRPC_PORT:?err}
+      - ${PUBLISHER_gRPC_TLS_PORT:?err}:${PUBLISHER_gRPC_TLS_PORT:?err}
+
+  gateway-client-remote:
+    ports:
+      - ${GATEWAY_CLIENT_REMOTE_HTTP_PORT:?err}:${GATEWAY_CLIENT_REMOTE_HTTP_PORT:?err}
+      - ${GATEWAY_CLIENT_REMOTE_HTTPS_PORT:?err}:${GATEWAY_CLIENT_REMOTE_HTTPS_PORT:?err}
+
+  rmq:
+    ports:
+      - "15672:15672"
