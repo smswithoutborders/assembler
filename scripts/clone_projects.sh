@@ -5,13 +5,15 @@ if ! command -v git &>/dev/null; then
     exit 1
 fi
 
-export $(grep -v '^#' ./.env.default | xargs)
+BASE_DIR=$(dirname $(dirname "$(realpath "$0")"))
 
-if [ -f ./.env ]; then
-    export $(grep -v '^#' ./.env | xargs)
+export $(grep -v '^#' $BASE_DIR/.env.default | xargs)
+
+if [ -f $BASE_DIR/.env ]; then
+    export $(grep -v '^#' $BASE_DIR/.env | xargs)
 fi
 
-PROJECTS_DIR="./projects"
+PROJECTS_DIR="$BASE_DIR/projects"
 
 clone_or_update_repo() {
     local repo_name=$1

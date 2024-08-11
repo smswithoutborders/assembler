@@ -8,6 +8,7 @@ show_help() {
     echo "  deploy   Deploy the projects"
     echo "  certs    Copy SSL certificates from Let's Encrypt"
     echo "  drop     Stop and remove containers, optionally delete their images"
+    echo "  install  Install the script and create a symbolic link in /usr/local/bin"
     echo ""
     echo "Options:"
     echo "  --branch BRANCH    Specify a branch for cloning/updating (optional for clone)"
@@ -17,7 +18,6 @@ show_help() {
     echo "  --letsencrypt DOMAIN Specify the Let's Encrypt domain name (required for certs)"
     echo "  --destination DOMAIN Specify the destination domain name (required for certs)"
     echo "  --remove-images    Remove Docker images after stopping and removing containers (optional for drop)"
-
 }
 
 if [ -z "$1" ]; then
@@ -40,6 +40,8 @@ check_for_extra_arguments() {
         handle_error "Unexpected arguments after command: $@"
     fi
 }
+
+BASE_DIR=$(dirname "$(realpath "$0")")
 
 case $COMMAND in
 clone)
@@ -72,7 +74,7 @@ clone)
 
     check_for_extra_arguments "$@"
 
-    ./scripts/clone_projects.sh ${TARGET_REPO:+--project $TARGET_REPO} ${BRANCH:+--branch $BRANCH}
+    $BASE_DIR/scripts/clone_projects.sh ${TARGET_REPO:+--project $TARGET_REPO} ${BRANCH:+--branch $BRANCH}
     ;;
 deploy)
     PROXY_FLAG=""
@@ -105,7 +107,7 @@ deploy)
 
     check_for_extra_arguments "$@"
 
-    ./scripts/deploy.sh ${TARGET_REPO:+--project $TARGET_REPO} $PROXY_FLAG $MANAGEMENT_FLAG
+    $BASE_DIR/scripts/deploy.sh ${TARGET_REPO:+--project $TARGET_REPO} $PROXY_FLAG $MANAGEMENT_FLAG
     ;;
 certs)
     LETSENCRYPT_DOMAIN=""
@@ -144,7 +146,7 @@ certs)
     LETSENCRYPT_PATH="/etc/letsencrypt/live/$LETSENCRYPT_DOMAIN"
     DESTINATION_PATH="/etc/ssl/certs/$DESTINATION_DOMAIN"
 
-    ./scripts/copy_certs.sh "$LETSENCRYPT_PATH" "$DESTINATION_PATH"
+    $BASE_DIR/scripts/copy_certs.sh "$LETSENCRYPT_PATH" "$DESTINATION_PATH"
     ;;
 drop)
     PROXY_FLAG=""
@@ -182,7 +184,25 @@ drop)
 
     check_for_extra_arguments "$@"
 
-    ./scripts/drop.sh ${TARGET_REPO:+--project $TARGET_REPO} $PROXY_FLAG $MANAGEMENT_FLAG $REMOVE_IMAGES_FLAG
+    $BASE_DIR/scripts/drop.sh ${TARGET_REPO:+--project $TARGET_REPO} $PROXY_FLAG $MANAGEMENT_FLAG $REMOVE_IMAGES_FLAG
+    ;;
+install)
+    SCRIPT_PATH="$BASE_DIR/assembler.sh"
+    SYMLINK_PATH="/usr/local/bin/assembler"
+
+    if [[ ! -f "$SCRIPT_PATH" ]]; then
+        handle_error "Script not found at $SCRIPT_PATH"
+    fi
+
+    if [[ -L "$SYMLINK_PATH" ]]; then
+        echo "Updating existing symbolic link at $SYMLINK_PATH"
+        sudo ln -sf "$SCRIPT_PATH" "$SYMLINK_PATH"
+    else
+        echo "Creating symbolic link at $SYMLINK_PATH"
+        sudo ln -s "$SCRIPT_PATH" "$SYMLINK_PATH"
+    fi
+
+    echo "Installation complete. You can now run 'assembler' from anywhere."
     ;;
 *)
     handle_error "Unknown command: $COMMAND."

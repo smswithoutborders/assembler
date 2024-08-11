@@ -9,10 +9,12 @@ else
     exit 1
 fi
 
-export $(grep -v '^#' ./.env.default | xargs)
+BASE_DIR=$(dirname $(dirname "$(realpath "$0")"))
 
-if [ -f ./.env ]; then
-    export $(grep -v '^#' ./.env | xargs)
+export $(grep -v '^#' $BASE_DIR/.env.default | xargs)
+
+if [ -f $BASE_DIR/.env ]; then
+    export $(grep -v '^#' $BASE_DIR/.env | xargs)
 fi
 
 if [ -z "$PROJECT_NAME" ]; then
@@ -25,12 +27,12 @@ INCLUDE_MANAGEMENT=false
 REMOVE_IMAGES=false
 TARGET_REPO=""
 
-PROJECTS_DIR="./projects"
+PROJECTS_DIR="$BASE_DIR/projects"
 
-PROJECTS_COMPOSE_FILE="./docker-compose.projects.yml"
-PROXY_COMPOSE_FILE="./docker-compose.proxy.yml"
-MANAGEMENT_COMPOSE_FILE="./docker-compose.management.yml"
-OVERRIDE_COMPOSE_FILE="./docker-compose.override.yml"
+PROJECTS_COMPOSE_FILE="$BASE_DIR/docker-compose.projects.yml"
+PROXY_COMPOSE_FILE="$BASE_DIR/docker-compose.proxy.yml"
+MANAGEMENT_COMPOSE_FILE="$BASE_DIR/docker-compose.management.yml"
+OVERRIDE_COMPOSE_FILE="$BASE_DIR/docker-compose.override.yml"
 
 while [[ "$1" =~ ^-- ]]; do
     case $1 in
@@ -94,11 +96,22 @@ if [ "$REMOVE_IMAGES" = true ]; then
     REMOVE_CMD="$REMOVE_CMD --rmi all"
 fi
 
+project_dirs=()
 for dir in "$PROJECTS_DIR"/*/; do
     repo_name=$(basename "$dir")
-    echo "- $repo_name"
+    project_dirs+=("$repo_name")
     export "${repo_name^^}_PATH=$dir"
 done
+
+target_name="${TARGET_REPO//_/-}"
+if [ -n "$TARGET_REPO" ]; then
+    echo "Removing project: $target_name"
+else
+    echo "Removing all projects in $PROJECTS_DIR:"
+    for repo in "${project_dirs[@]}"; do
+        echo "- $repo"
+    done
+fi
 
 echo "Running command: $REMOVE_CMD"
 if ! $REMOVE_CMD; then

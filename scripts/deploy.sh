@@ -9,10 +9,12 @@ else
     exit 1
 fi
 
-export $(grep -v '^#' ./.env.default | xargs)
+BASE_DIR=$(dirname $(dirname "$(realpath "$0")"))
 
-if [ -f ./.env ]; then
-    export $(grep -v '^#' ./.env | xargs)
+export $(grep -v '^#' $BASE_DIR/.env.default | xargs)
+
+if [ -f $BASE_DIR/.env ]; then
+    export $(grep -v '^#' $BASE_DIR/.env | xargs)
 fi
 
 if [ -z "$PROJECT_NAME" ]; then
@@ -24,12 +26,12 @@ USE_PROXY=false
 INCLUDE_MANAGEMENT=false
 TARGET_REPO=""
 
-PROJECTS_DIR="./projects"
+PROJECTS_DIR="$BASE_DIR/projects"
 
-PROJECTS_COMPOSE_FILE="./docker-compose.projects.yml"
-PROXY_COMPOSE_FILE="./docker-compose.proxy.yml"
-MANAGEMENT_COMPOSE_FILE="./docker-compose.management.yml"
-OVERRIDE_COMPOSE_FILE="./docker-compose.override.yml"
+PROJECTS_COMPOSE_FILE="$BASE_DIR/docker-compose.projects.yml"
+PROXY_COMPOSE_FILE="$BASE_DIR/docker-compose.proxy.yml"
+MANAGEMENT_COMPOSE_FILE="$BASE_DIR/docker-compose.management.yml"
+OVERRIDE_COMPOSE_FILE="$BASE_DIR/docker-compose.override.yml"
 
 while [[ "$1" =~ ^-- ]]; do
     case $1 in

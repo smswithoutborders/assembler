@@ -24,6 +24,12 @@ if [ ! -d "$ssl_certs" ]; then
     fi
 fi
 
+echo "Setting permissions to 755 for $ssl_certs..."
+if ! chmod -R 755 "$ssl_certs"; then
+    echo "ERROR: Failed to set permissions for $ssl_certs"
+    exit 1
+fi
+
 echo "Copying $LETSENCRYPT_CERTIFICATE_FILE from $letsencrypt_live to $ssl_certs/$DESTINATION_CERTIFICATE_FILE..."
 if ! cp -fL "$letsencrypt_live/$LETSENCRYPT_CERTIFICATE_FILE" "$ssl_certs/$DESTINATION_CERTIFICATE_FILE"; then
     echo "ERROR: Failed to copy $LETSENCRYPT_CERTIFICATE_FILE to $ssl_certs/$DESTINATION_CERTIFICATE_FILE"
