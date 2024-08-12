@@ -10,6 +10,10 @@ services:
     ports:
       - ${HOMEPAGE_HTTP_PORT:?err}:${HOMEPAGE_HTTP_PORT:?err}
       - ${HOMEPAGE_HTTPS_PORT:?err}:${HOMEPAGE_HTTPS_PORT:?err}
+    build:
+      args:
+        - SWOB_BE_HOST=https://${VAULT_HTTP_HOST}:${VAULT_HTTPS_PORT}
+        - SWOB_GS_HOST=https://${GATEWAY_SERVER_HTTP_HOST}:${GATEWAY_SERVER_HTTPS_PORT}
 
   telemetry-homepage:
     ports:

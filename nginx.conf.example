@@ -1,0 +1,83 @@
+events {}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    add_header X-Frame-Options "DENY";
+    add_header X-Content-Type-Options "nosniff";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Referrer-Policy "no-referrer";
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; frame-ancestors 'none';";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+    limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
+    limit_req zone=mylimit burst=20 nodelay;
+
+    server {
+        listen 80;
+        server_name <domain>;
+
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name <domain>;
+
+        ssl_certificate /etc/nginx/certs/<domain>/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/<domain>/privkey.pem;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers on;
+
+        location / {
+            proxy_pass https://<backend_host>:<backend_port>;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+
+    server {
+        listen 443 ssl;
+        server_name <another_domain>;
+
+        http2 on;
+        ssl_certificate /etc/nginx/certs/<domain>/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/<domain>/privkey.pem;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers on;
+        
+        location / {
+            proxy_pass https://<another_backend_host>:<another_backend_port>;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /<grpc_service> {
+            grpc_pass grpcs://<another_backend_host>:<grpc_port>;
+        }
+    }
+
+    # Add additional servers as needed
+    # server {
+    #     listen 443 ssl;
+    #     server_name <other_domain>;
+
+    #     ssl_certificate /etc/nginx/certs/<domain>/fullchain.pem;
+    #     ssl_certificate_key /etc/nginx/certs/<domain>/privkey.pem;
+    #     ssl_protocols TLSv1.2 TLSv1.3;
+    #     ssl_prefer_server_ciphers on;
+
+    #     location / {
+    #         proxy_pass https://<other_backend_host>:<other_backend_port>;
+    #         proxy_set_header Host $host;
+    #         proxy_set_header X-Real-IP $remote_addr;
+    #         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    #         proxy_set_header X-Forwarded-Proto $scheme;
+    #     }
+    # }
+}

@@ -69,8 +69,8 @@ services:
       dockerfile: Dockerfile
       target: production
       args:
-        - SWOB_BE_HOST=https://${VAULT_HTTP_HOST}:${VAULT_HTTPS_PORT}
-        - SWOB_GS_HOST=https://${GATEWAY_SERVER_HTTP_HOST}:${GATEWAY_SERVER_HTTPS_PORT}
+        - SWOB_BE_HOST=https://${VAULT_HTTP_HOST}
+        - SWOB_GS_HOST=https://${GATEWAY_SERVER_HTTP_HOST}
         - SWOB_RECAPTCHA_ENABLE=${ENABLE_RECAPTCHA}
         - SWOB_RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
         - SWOB_SSL_CRT_FILE=${SSL_CERTIFICATE_FILE:?err}
