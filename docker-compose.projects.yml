@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
       target: production
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
@@ -22,7 +22,7 @@ services:
       - PORT=${VAULT_HTTP_PORT:?err}
       - ORIGINS=["https://${HOMEPAGE_HTTP_HOST}"]
 
-      - GRPC_HOST=${VAULT_gRPC_HOST:?err}
+      - GRPC_HOST=0.0.0.0
       - GRPC_PORT=${VAULT_gRPC_PORT:?err}
       - GRPC_SSL_PORT=${VAULT_gRPC_TLS_PORT:?err}
       - GRPC_INTERNAL_PORT=${VAULT_gRPC_INTERNAL_PORT:?err}
@@ -118,7 +118,7 @@ services:
         - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
         - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
       - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
@@ -226,11 +226,11 @@ services:
       context: ${PUBLISHER_PATH}
       dockerfile: Dockerfile
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
     environment:
-      - GRPC_HOST=${PUBLISHER_gRPC_HOST:?err}
+      - GRPC_HOST=0.0.0.0
       - GRPC_PORT=${PUBLISHER_gRPC_PORT:?err}
       - GRPC_SSL_PORT=${PUBLISHER_gRPC_TLS_PORT:?err}
 
