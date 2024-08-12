@@ -117,6 +117,8 @@ services:
         - SSL_CERTIFICATE=${SSL_CERTIFICATE_FILE:?err}
         - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
         - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
+    links:
+      - publisher:${PUBLISHER_gRPC_HOST:?err}
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
@@ -225,6 +227,8 @@ services:
     build:
       context: ${PUBLISHER_PATH}
       dockerfile: Dockerfile
+    links:
+      - vault:${VAULT_gRPC_HOST:?err}
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
