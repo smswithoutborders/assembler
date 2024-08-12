@@ -55,7 +55,7 @@ services:
       - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
       - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
       - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
-      - KEYSTORE_PATH=/usr/local/share/smswithoutborders/keystore"
+      - KEYSTORE_PATH=/usr/local/share/smswithoutborders/keystore
     networks:
       - assembler_network
 
