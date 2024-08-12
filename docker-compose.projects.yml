@@ -16,7 +16,7 @@ services:
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
       - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
       - ${BROADCAST_WHITELIST:?err}:/usr/local/share/smswithoutborders/broadcast_list
-      - ${KEYSTORE_PATH:?err}:/usr/local/share/smswithoutborders/keystore
+      - ${KEYSTORE_PATH:?err}:/usr/local/share/smswithoutborders/keystore:rw
     environment:
       - HOST=${VAULT_HTTP_HOST:?err}
       - PORT=${VAULT_HTTP_PORT:?err}
