@@ -103,7 +103,6 @@ for dir in "$PROJECTS_DIR"/*/; do
     export "${repo_name^^}_PATH=$dir"
 done
 
-target_name="${TARGET_REPO//_/-}"
 if [ -n "$TARGET_REPO" ]; then
     echo "Removing project: $target_name"
 else

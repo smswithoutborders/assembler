@@ -16,7 +16,7 @@ services:
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
       - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
       - ${BROADCAST_WHITELIST:?err}:/usr/local/share/smswithoutborders/broadcast_list
-      - ${KEYSTORE_PATH:?err}:/usr/local/share/smswithoutborders/keystore:rw
+      - keystore-data:/usr/local/share/smswithoutborders/keystore
     environment:
       - HOST=${VAULT_HTTP_HOST:?err}
       - PORT=${VAULT_HTTP_PORT:?err}
@@ -342,6 +342,7 @@ services:
 volumes:
   db-data:
   rmq-data:
+  keystore-data:
 
 
 networks:

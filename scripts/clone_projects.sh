@@ -98,3 +98,6 @@ else
         clone_or_update_repo "$repo_name" "$repo_url" "$BRANCH"
     done
 fi
+
+echo "Cloning completed successfully."
+exit 0

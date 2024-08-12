@@ -84,6 +84,9 @@ else
     DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD -f $OVERRIDE_COMPOSE_FILE"
 fi
 
+target_name="${TARGET_REPO//_/-}"
+DEPLOY_CMD="$DOCKER_COMPOSE_CMD up --build --force-recreate -d $target_name"
+
 project_dirs=()
 for dir in "$PROJECTS_DIR"/*/; do
     repo_name=$(basename "$dir")
@@ -91,7 +94,6 @@ for dir in "$PROJECTS_DIR"/*/; do
     export "${repo_name^^}_PATH=$dir"
 done
 
-target_name="${TARGET_REPO//_/-}"
 if [ -n "$TARGET_REPO" ]; then
     echo "Deploying project: $target_name"
 else
@@ -101,8 +103,8 @@ else
     done
 fi
 
-echo "Running command: $DOCKER_COMPOSE_CMD up --build -d $target_name"
-if ! $DOCKER_COMPOSE_CMD up --build -d $target_name; then
+echo "Running command: $DEPLOY_CMD"
+if ! $DEPLOY_CMD; then
     echo "Error: Docker Compose failed."
     exit 1
 fi
