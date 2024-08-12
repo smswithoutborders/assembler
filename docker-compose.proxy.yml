@@ -1,57 +1,16 @@
 services:
-  nginx-proxy-manager:
-    image: jc21/nginx-proxy-manager:latest
-    container_name: nginx-proxy-manager
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     restart: always
-    depends_on:
-      - npm-database
     ports:
       - "80:80"
-      # - "81:81" # Admin Web Port
       - "443:443"
     volumes:
-      - npm_data:/data
-      - npm_letsencrypt:/etc/letsencrypt
-    environment:
-      - DB_MYSQL_HOST=npm-database
-      - DB_MYSQL_PORT=3306
-      - DB_MYSQL_USER=${MYSQL_USER:?err}
-      - DB_MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
-      - DB_MYSQL_NAME=${NGINX_PROXY_MANAGER_DATABASE:?err}
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${SSL_CERTIFICATES_PATH}:/etc/nginx/certs:ro
     networks:
       - assembler_network
-
-  npm-database:
-    restart: unless-stopped
-    container_name: npm-database
-    image: mariadb:11.4
-    volumes:
-      - npm_db_data:/var/lib/mysql
-    environment:
-      - MARIADB_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MARIADB_USER=${MYSQL_USER}
-      - MARIADB_PASSWORD=${MYSQL_PASSWORD}
-      - MARIADB_DATABASE=${NGINX_PROXY_MANAGER_DATABASE}
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "healthcheck.sh",
-          "--connect",
-          "--innodb_initialized"
-        ]
-      start_period: 10s
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    networks:
-      - assembler_network
-
-volumes:
-  npm_data:
-  npm_db_data:
-  npm_letsencrypt:
-
 
 networks:
   assembler_network:
