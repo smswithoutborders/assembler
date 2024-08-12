@@ -10,12 +10,12 @@ services:
       dockerfile: Dockerfile
       target: production
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
-      - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
       - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
       - ${BROADCAST_WHITELIST:?err}:/usr/local/share/smswithoutborders/broadcast_list
+      - telegram-data:/usr/local/share/smswithoutborders/telegram
       - keystore-data:/usr/local/share/smswithoutborders/keystore
     environment:
       - HOST=${VAULT_HTTP_HOST:?err}
@@ -107,6 +107,8 @@ services:
         condition: service_healthy
       rmq:
         condition: service_healthy
+      publisher:
+        condition: service_started
     build:
       context: ${GATEWAY_SERVER_PATH}
       dockerfile: Dockerfile
@@ -120,12 +122,12 @@ services:
     links:
       - publisher:${PUBLISHER_gRPC_HOST:?err}
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
       - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
-      - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
-      - ${GATEWAY_SERVER_FTP_DIRECTORY:?err}:/usr/local/share/smswithoutborders/ftp_directory
+      - telegram-data:/usr/local/share/smswithoutborders/telegram
+      - ftp-data:/usr/local/share/smswithoutborders/ftp
     environment:
       - ORIGINS=["https://${HOMEPAGE_HTTP_HOST}"]
 
@@ -179,7 +181,7 @@ services:
       - FTP_PASSIVE_PORTS=${GATEWAY_SERVER_FTP_PASSIVE_PORTS:?err}
       - FTP_MAX_CON=${GATEWAY_SERVER_FTP_MAX_CON:?err}
       - FTP_MAX_CON_PER_IP=${GATEWAY_SERVER_FTP_MAX_CON_PER_IP:?err}
-      - FTP_DIRECTORY=${GATEWAY_SERVER_FTP_DIRECTORY:?err}
+      - FTP_DIRECTORY=/usr/local/share/smswithoutborders/ftp
 
       - DEKU_CLOUD_URL=${DEKU_CLOUD_URL:?err}
       - DEKU_CLOUD_PROJECT_REF=${DEKU_CLOUD_PROJECT_REF:?err}
@@ -230,9 +232,9 @@ services:
     links:
       - vault:${VAULT_gRPC_HOST:?err}
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:rw
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
-      - ./${DATA_BIND_DIR:?err}:/usr/local/share/smswithoutborders/telegram
+      - telegram-data:/usr/local/share/smswithoutborders/telegram
     environment:
       - GRPC_HOST=0.0.0.0
       - GRPC_PORT=${PUBLISHER_gRPC_PORT:?err}
@@ -270,11 +272,13 @@ services:
     container_name: gateway-client-remote
     depends_on:
       - gateway-server
+    links:
+      - gateway-server:${GATEWAY_SERVER_HTTP_HOST:?err}
     build:
       context: ${GATEWAY_CLIENT_REMOTE_PATH}
       dockerfile: Dockerfile
     volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}:ro
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
     environment:
       - SERVER_NAME=${GATEWAY_CLIENT_REMOTE_HTTP_HOST:?err}
       - PORT=${GATEWAY_CLIENT_REMOTE_HTTP_PORT:?err}
@@ -328,9 +332,9 @@ services:
       context: ${RMQ_PATH}
       dockerfile: Dockerfile
     volumes:
-      - ${SSL_CERTIFICATE_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.crt:ro
-      - ${SSL_CERTIFICATE_KEY_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.key:ro
-      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.pem:ro
+      - ${SSL_CERTIFICATE_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.crt
+      - ${SSL_CERTIFICATE_KEY_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.key
+      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.pem
       - rmq-data:/var/lib/rabbitmq/mnesia/
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
@@ -347,6 +351,8 @@ volumes:
   db-data:
   rmq-data:
   keystore-data:
+  telegram-data:
+  ftp-data:
 
 
 networks:
