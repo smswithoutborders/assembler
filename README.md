@@ -37,10 +37,6 @@ Before using Assembler, make sure you have the following dependencies installed 
 
 ---
 
-Here's an updated version of the `.env` configuration section with hints and descriptions for each configuration variable:
-
----
-
 ## Configuration
 
 To configure your deployment, you'll need to set up environment variables in a `.env` file. These variables control various aspects of your application's behavior, such as the hosts, credentials, encryption keys, and third-party services.
@@ -63,22 +59,22 @@ To configure your deployment, you'll need to set up environment variables in a `
    - **VAULT_HTTP_HOST** & **VAULT_gRPC_HOST**: These should point to the URLs or IP addresses where the Vault service is hosted, using HTTP and gRPC protocols respectively.
    - **PUBLISHER_HTTP_HOST** & **PUBLISHER_gRPC_HOST**: Define the HTTP and gRPC hosts for the Publisher service.
    - **GATEWAY_SERVER_HTTP_HOST**: Set this to the base URL or IP address for the Gateway server.
-   - **GATEWAY*SERVER_FTP*\* variables**: Configure the FTP access details for file transfer operations on the Gateway server.
-   - **GATEWAY*SERVER_IMAP*\* variables**: Set up the IMAP server details for email retrieval and processing on the Gateway server.
+   - **GATEWAY_SERVER_FTP\_\* variables**: Configure the FTP access details for file transfer operations on the Gateway server.
+   - **GATEWAY_SERVER_IMAP\_\* variables**: Set up the IMAP server details for email retrieval and processing on the Gateway server.
    - **GATEWAY_CLIENT_REMOTE_HTTP_HOST**: Specify the HTTP host for the remote client that interacts with the Gateway server.
-   - **PUBLISHER_ENCRYPTION_KEY**: A secure key for encrypting data within the Publisher service (Will be deprecated in V3).
+   - **PUBLISHER_ENCRYPTION_KEY**: A secure key for encrypting data within the Publisher service `(Will be deprecated in V3)`.
    - **HASHING_SALT**: Path to a file containing a random value used to hash data.
    - **SHARED_KEY**: Path to a file containing a random value used to encrypt data.
-   - **SSL*CERTIFICATE*\* variables**: Paths to your SSL/TLS certificates, which are necessary for securing your application with HTTPS.
+   - **SSL_CERTIFICATE\_\* variables**: Paths to your SSL/TLS certificates, which are necessary for securing your application with HTTPS.
    - **MYSQL\_\* variables**: MySQL database credentials for accessing the database securely.
    - **RABBITMQ\_\* variables**: RabbitMQ broker credentials, essential for message queuing between services.
    - **RECAPTCHA\_\* variables**: Keys for integrating Google reCAPTCHA into your application for bot protection.
    - **THIRD_PARTY_CREDENTIALS_PATH**: Path to a directory containing credentials for third-party services.
    - **KEYSTORE_PATH**: Path to a directory where vault keypairs are stored.
-   - **BROADCAST_WHITELIST**: Path to a file containing IP addresses allowed to send broadcast messages within your network (Will be deprecated in V3).
+   - **BROADCAST_WHITELIST**: Path to a file containing IP addresses allowed to send broadcast messages within your network `(Will be deprecated in V3)`.
    - **TWILIO\_\* variables**: Twilio API credentials for managing OTP services, including account SID, authentication token, and service SID.
    - **MOCK_OTP**: (Optional) A static OTP value used for testing environments without real OTPs.
-   - **DEKU*CLOUD*\* variables**: Configuration for connecting to Deku Cloud services, including authentication details and service references.
+   - **DEKU_CLOUD\_\* variables**: Configuration for connecting to Deku Cloud services, including authentication details and service references.
 
 ---
 
@@ -172,8 +168,9 @@ The `certs` command is used to copy SSL certificates from Let's Encrypt.
 
 - **Options**:
 
-  - **`--letsencrypt DOMAIN`**: Domain name associated with Let's Encrypt certificates. This domain name is appended to the `/etc/letsencrypt/live/` path.
-  - **`--destination DOMAIN`**: Destination domain name for the certificates. This domain name is appended to the `/etc/ssl/certs/` path.
+  - **`--letsencrypt DOMAIN`**: Specifies the domain name associated with Let's Encrypt certificates. The domain name is used to locate the certificate files in the directory path `/etc/letsencrypt/live/DOMAIN/`. This directory contains the necessary certificate files for the specified domain.
+
+  - **`--destination DOMAIN`**: Defines the destination domain name for the certificates. The domain name is appended to the `/etc/ssl/certs/DOMAIN/` path, where the certificate files will be stored. This directory will hold the certificates required for secure communication for the specified domain.
 
 #### Drop Command
 
