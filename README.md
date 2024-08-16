@@ -150,14 +150,14 @@ The `deploy` command is used to deploy the projects, optionally using a reverse 
   - **`--management`**: Include management tools (Portainer).
   - **`--project PROJECT`**: (Optional) Specify a project to deploy.
 
-  > [!NOTE]
-  >
-  > If you're using the `--proxy` option, ensure you copy the `nginx.conf.example`
-  > file to `nginx.conf` and modify as required:
-  >
-  > ```bash
-  > cp nginx.conf.example nginx.conf
-  > ```
+> [!NOTE]
+>
+> If you're using the `--proxy` option, ensure you copy the `nginx.conf.example`
+> file to `nginx.conf` and modify as required:
+>
+> ```bash
+> cp nginx.conf.example nginx.conf
+> ```
 
 - **Example**:
 
