@@ -9,7 +9,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ${SSL_CERTIFICATES_PATH}:/etc/nginx/certs:ro
-      - ./nginx_defaults:/etc/nginx/conf.d:ro
+      - ./nginx_defaults:/etc/nginx:ro
     networks:
       - assembler_network
 
