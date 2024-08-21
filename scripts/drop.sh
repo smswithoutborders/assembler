@@ -90,7 +90,7 @@ else
 fi
 
 target_name="${TARGET_REPO//_/-}"
-REMOVE_CMD="$DOCKER_COMPOSE_CMD down -q $target_name"
+REMOVE_CMD="$DOCKER_COMPOSE_CMD down $target_name"
 
 if [ "$REMOVE_IMAGES" = true ]; then
     REMOVE_CMD="$REMOVE_CMD --rmi all"
