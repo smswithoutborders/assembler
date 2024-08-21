@@ -8,8 +8,8 @@ services:
 
   homepage:
     ports:
-      - ${HOMEPAGE_HTTP_PORT:?err}:${HOMEPAGE_HTTP_PORT:?err}
-      - ${HOMEPAGE_HTTPS_PORT:?err}:${HOMEPAGE_HTTPS_PORT:?err}
+      - ${HOMEPAGE_HTTP_PORT:?err}:80
+      - ${HOMEPAGE_HTTPS_PORT:?err}:443
     build:
       args:
         - SWOB_BE_HOST=https://${VAULT_HTTP_HOST}:${VAULT_HTTPS_PORT}
@@ -17,8 +17,8 @@ services:
 
   telemetry-homepage:
     ports:
-      - ${TELEMETRY_HOMEPAGE_HTTP_PORT:?err}:${TELEMETRY_HOMEPAGE_HTTP_PORT:?err}
-      - ${TELEMETRY_HOMEPAGE_HTTPS_PORT:?err}:${TELEMETRY_HOMEPAGE_HTTPS_PORT:?err}
+      - ${TELEMETRY_HOMEPAGE_HTTP_PORT:?err}:80
+      - ${TELEMETRY_HOMEPAGE_HTTPS_PORT:?err}:443
 
   gateway-server:
     ports:
