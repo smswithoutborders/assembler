@@ -85,7 +85,7 @@ else
 fi
 
 target_name="${TARGET_REPO//_/-}"
-DEPLOY_CMD="$DOCKER_COMPOSE_CMD up --build --force-recreate -d $target_name"
+DEPLOY_CMD="$DOCKER_COMPOSE_CMD up --build --force-recreate -d -q $target_name"
 
 project_dirs=()
 for dir in "$PROJECTS_DIR"/*/; do
