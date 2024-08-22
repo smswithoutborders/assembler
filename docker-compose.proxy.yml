@@ -11,9 +11,9 @@ services:
       - "15000:15000"
       - "9000:9000"
       - "8080:8080"
-      - "7080:7080"
+      - "7000:7000"
     volumes:
-      # - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/security.conf:/etc/nginx/security.conf:ro
       - ./nginx/block-exploits.conf:/etc/nginx/block-exploits.conf:ro
       - ./nginx/templates:/etc/nginx/templates
