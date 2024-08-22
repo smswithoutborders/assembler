@@ -18,6 +18,11 @@ services:
       - ./nginx/block-exploits.conf:/etc/nginx/block-exploits.conf:ro
       - ./nginx/templates:/etc/nginx/templates
       - ${SSL_CERTIFICATES_PATH}:/etc/nginx/certs:ro
+    env_file:
+      - path: .env.default
+        required: true
+      - path: .env
+        required: false
     networks:
       - assembler_network
 
