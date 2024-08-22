@@ -10,8 +10,6 @@
 #                                                             #
 ###############################################################
 
-worker_processes auto;
-
 events {
     multi_accept on;
     worker_connections 1024;
