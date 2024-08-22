@@ -11,6 +11,7 @@ services:
       - "15000:15000"
       - "9000:9000"
       - "8080:8080"
+      - "7080:7080"
     volumes:
       # - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/security.conf:/etc/nginx/security.conf:ro

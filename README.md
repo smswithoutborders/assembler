@@ -152,12 +152,13 @@ The `deploy` command is used to deploy the projects, optionally using a reverse 
 
 > [!NOTE]
 >
-> If you're using the `--proxy` option, ensure you copy the `nginx.conf.example`
-> file to `nginx.conf` and modify as required:
+> If you're using the `--proxy` option and need additional custom configurations, you can create your own Nginx configuration by copying the example file:
 >
 > ```bash
-> cp nginx.conf.example nginx.conf
+> cp ./nginx/nginx.conf.example ./nginx/nginx.conf
 > ```
+>
+> Once copied, modify `./nginx/nginx.conf` to suit your specific requirements.
 
 - **Example**:
 
