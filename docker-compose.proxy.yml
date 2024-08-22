@@ -3,6 +3,8 @@ services:
     restart: unless-stopped
     image: nginx:latest
     container_name: nginx
+    depends_on:
+      - homepage
     ports:
       - "80:80"
       - "443:443"
@@ -10,9 +12,10 @@ services:
       - "9000:9000"
       - "8080:8080"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx_defaults/security.conf:/etc/nginx/security.conf:ro
-      - ./nginx_defaults/block-exploits.conf:/etc/nginx/block-exploits.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/security.conf:/etc/nginx/security.conf:ro
+      - ./nginx/block-exploits.conf:/etc/nginx/block-exploits.conf:ro
+      - ./nginx/templates:/etc/nginx/templates
       - ${SSL_CERTIFICATES_PATH}:/etc/nginx/certs:ro
     networks:
       - assembler_network

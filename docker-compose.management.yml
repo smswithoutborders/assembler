@@ -1,11 +1,11 @@
 services:
   portainer:
-    restart: always
+    restart: unless-stopped
     image: portainer/portainer-ce:latest
     container_name: portainer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+      - portainer-data:/data
       - ${SSL_CERTIFICATE_FILE:?err}:/certs/fullchain.pem
       - ${SSL_CERTIFICATE_KEY_FILE:?err}:/certs/privkey.pem
     command: --sslcert /certs/fullchain.pem --sslkey /certs/privkey.pem
@@ -13,7 +13,7 @@ services:
       - assembler_network
 
 volumes:
-  portainer_data:
+  portainer-data:
 
 
 networks:

@@ -155,7 +155,6 @@ services:
       - MYSQL_BE_DATABASE=${MYSQL_DATABASE:?err}
 
       - RMQ_HOST=${RMQ_HOST:-rmq}
-      # - RMQ_SSL=${RMQ_SSL:-false}
       - RMQ_SSL=false
 
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-guest}
@@ -306,13 +305,7 @@ services:
       - MARIADB_PASSWORD=${MYSQL_PASSWORD}
       - MARIADB_DATABASE=${MYSQL_DATABASE}
     healthcheck:
-      test:
-        [
-          "CMD",
-          "healthcheck.sh",
-          "--connect",
-          "--innodb_initialized"
-        ]
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 10s
       interval: 10s
       timeout: 5s

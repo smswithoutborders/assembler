@@ -1,0 +1,241 @@
+###############################################################
+#                                                             #
+#   Assembler - RelaySMS Deployment Configuration Template    #
+#                                                             #
+#   Automating the setup, cloning, and deployment of          #
+#   RelaySMS units with streamlined precision. This Nginx     #
+#   configuration template serves as the backbone for         #
+#   ensuring secure and efficient service routing across      #
+#   all components.                                           #
+#                                                             #
+###############################################################
+
+worker_processes auto;
+
+events {
+    multi_accept on;
+    worker_connections 1024;
+}
+
+http {
+    ###############################################################
+    # Global Configurations                                       #
+    ###############################################################
+
+    server_tokens off;
+
+    include mime.types;
+    default_type application/octet-stream;
+
+    limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
+    limit_req zone=mylimit burst=20 nodelay;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4 208.67.222.222 208.67.220.220 valid=60s;
+    resolver_timeout 2s;
+
+    ###############################################################
+    # Homepage Service Configuration                              #
+    ###############################################################
+
+    server {
+        listen 80;
+        server_name ${HOMEPAGE_HTTP_HOST};
+
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name ${HOMEPAGE_HTTP_HOST};
+
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location / {
+            proxy_pass https://homepage:443;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+
+    ###############################################################
+    # Vault Service Configuration                                 #
+    ###############################################################
+    
+    server {
+        listen ${VAULT_HTTPS_PORT} ssl;
+        server_name ${HOMEPAGE_HTTP_HOST};
+
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location / {
+            proxy_pass https://vault:${VAULT_HTTPS_PORT};
+            proxy_set_header Host ${VAULT_HTTP_HOST};
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name ${VAULT_gRPC_HOST};
+
+        http2 on;
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location / {
+            proxy_pass https://vault:${VAULT_HTTPS_PORT};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /vault.v1.Entity {
+            grpc_pass grpcs://vault:${VAULT_gRPC_TLS_PORT};
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+
+    ###############################################################
+    # Gateway Server Configuration                                #
+    ###############################################################
+
+    server {
+        listen ${GATEWAY_SERVER_HTTPS_PORT} ssl;
+        server_name ${HOMEPAGE_HTTP_HOST};
+
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location / {
+            proxy_pass https://gateway-server:${GATEWAY_SERVER_HTTPS_PORT};
+            proxy_set_header Host ${GATEWAY_SERVER_HTTP_HOST};
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name ${GATEWAY_SERVER_HTTP_HOST};
+
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location / {
+            proxy_pass https://gateway-server:${GATEWAY_SERVER_HTTPS_PORT};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+
+    ###############################################################
+    # Telemetry Homepage Service Configuration                    #
+    ###############################################################
+
+    server {
+        listen ${TELEMETRY_HOMEPAGE_HTTPS_PORT} ssl;
+        server_name ${HOMEPAGE_HTTP_HOST};
+
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location / {
+            proxy_pass https://telemetry-homepage:443;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+
+    ###############################################################
+    # Publisher Service Configuration                             #
+    ###############################################################
+   
+    server {
+        listen 443 ssl;
+        server_name ${PUBLISHER_gRPC_HOST};
+
+        http2 on;
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location /publisher.v1.Publisher {
+            grpc_pass grpcs://publisher:${PUBLISHER_gRPC_TLS_PORT};
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+
+    ###############################################################
+    # Gateway Client Remote Service Configuration                 #
+    ###############################################################
+   
+    server {
+        listen ${GATEWAY_CLIENT_REMOTE_HTTPS_PORT} ssl;
+        server_name ${HOMEPAGE_HTTP_HOST};
+
+        ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+        ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+        include /etc/nginx/security.conf;
+
+        location / {
+            proxy_pass https://gateway-client-remote:${GATEWAY_CLIENT_REMOTE_HTTPS_PORT};
+            proxy_set_header Host ${GATEWAY_CLIENT_REMOTE_HTTP_HOST};
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        include /etc/nginx/block-exploits.conf;
+    }
+}

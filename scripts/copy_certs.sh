@@ -24,8 +24,8 @@ if [ ! -d "$ssl_certs" ]; then
     fi
 fi
 
-echo "Setting permissions to 755 for $ssl_certs..."
-if ! chmod -R 755 "$ssl_certs"; then
+echo "Setting permissions to 755 for all files and directories in $ssl_certs..."
+if ! chmod -R 755 "$ssl_certs"/*; then
     echo "ERROR: Failed to set permissions for $ssl_certs"
     exit 1
 fi
