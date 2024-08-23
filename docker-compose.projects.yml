@@ -68,18 +68,12 @@ services:
       context: ${HOMEPAGE_PATH}
       dockerfile: Dockerfile
       target: production
-      args:
-        - SWOB_BE_HOST=https://${VAULT_HTTP_HOST}
-        - SWOB_GS_HOST=https://${GATEWAY_SERVER_HTTP_HOST}
-        - SWOB_RECAPTCHA_ENABLE=${ENABLE_RECAPTCHA}
-        - SWOB_RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
-        - SWOB_SSL_CRT_FILE=${SSL_CERTIFICATE_FILE:?err}
-        - SWOB_SSL_KEY_FILE=${SSL_CERTIFICATE_KEY_FILE:?err}
-        - SWOB_SSL_ENABLE=true
     volumes:
-      - ${SSL_CERTIFICATE_FILE:?err}:/usr/local/apache2/conf/server.crt
-      - ${SSL_CERTIFICATE_KEY_FILE:?err}:/usr/local/apache2/conf/server.key
-      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/usr/local/apache2/conf/server.pem
+      - ${SSL_CERTIFICATE_FILE:?err}:/etc/nginx/ssl/cert.pem
+      - ${SSL_CERTIFICATE_KEY_FILE:?err}:/etc/nginx/ssl/key.pem
+      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/etc/nginx/ssl/chain.pem
+    environment:
+      - SERVER_NAME=${HOMEPAGE_HTTP_HOST:?err}
     networks:
       - assembler_network
 
