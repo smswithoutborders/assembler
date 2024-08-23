@@ -15,6 +15,7 @@ services:
   database-cron-backup:
     restart: unless-stopped
     image: fradelg/mysql-cron-backup
+    container_name: database-backup
     depends_on:
       - database
     volumes:
