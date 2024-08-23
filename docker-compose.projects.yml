@@ -67,7 +67,6 @@ services:
     build:
       context: ${HOMEPAGE_PATH}
       dockerfile: Dockerfile
-      target: production
     volumes:
       - ${SSL_CERTIFICATE_FILE:?err}:/etc/nginx/ssl/cert.pem
       - ${SSL_CERTIFICATE_KEY_FILE:?err}:/etc/nginx/ssl/key.pem
