@@ -12,8 +12,29 @@ services:
     networks:
       - assembler_network
 
+  database-cron-backup:
+    restart: unless-stopped
+    image: fradelg/mysql-cron-backup
+    depends_on:
+      - database
+    volumes:
+      - database-backup-data:/backup
+    environment:
+      - MYSQL_HOST=database
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASS=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MAX_BACKUPS=${DB_MAX_BACKUPS:-15}
+      - INIT_BACKUP=0
+      - EXIT_BACKUP=1
+      - CRON_TIME=${DB_BACKUP_CRON_SCHEDULE:-0 3 * * *}
+      - GZIP_LEVEL=9
+      # As of MySQL 8.0.21 this is needed
+      - MYSQLDUMP_OPTS=--no-tablespaces
+
 volumes:
   portainer-data:
+  database-backup-data:
 
 
 networks:
