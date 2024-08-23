@@ -32,6 +32,8 @@ services:
       - GZIP_LEVEL=9
       # As of MySQL 8.0.21 this is needed
       - MYSQLDUMP_OPTS=--no-tablespaces
+    networks:
+      - assembler_network
 
 volumes:
   portainer-data:
