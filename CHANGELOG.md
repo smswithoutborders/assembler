@@ -1,4 +1,4 @@
-# Change Log
+# ChangeLog
 
 All notable changes to this project will be documented in this file.
 
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](#).
 
 ### Changed
 
-- Removed --proxy and --management options to the deploy command.
-- Removed --proxy and --management options to the drop command.
+- Removed --proxy and --management options from the deploy command.
+- Removed --proxy and --management options from the drop command.
 
 ## [0.0.0] - 2024-08-08
