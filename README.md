@@ -128,12 +128,6 @@ The `clone` command is used to clone repositories or update existing ones.
   - **`--branch BRANCH`**: Specify the branch to clone or update.
   - **`--project PROJECT`**: (Optional) Specify a project to clone or update. If omitted, all projects are cloned or updated.
 
-- **Example**:
-
-  ```bash
-  assembler clone --branch develop --project my-repo
-  ```
-
 #### Deploy Command
 
 The `deploy` command is used to deploy the projects, optionally using a reverse proxy and management tools.
@@ -149,22 +143,6 @@ The `deploy` command is used to deploy the projects, optionally using a reverse 
   - **`--no-proxy`**: Disable the use of a reverse proxy (Nginx).
   - **`--no-management`**: Exclude management tools from the deployment.
   - **`--project PROJECT`**: (Optional) Specify a project to deploy.
-
-> [!NOTE]
->
-> If you're using the `--proxy` option and need additional custom configurations, you can create your own Nginx configuration by copying the example file:
->
-> ```bash
-> cp ./nginx/nginx.conf.example ./nginx/nginx.conf
-> ```
->
-> Once copied, modify `./nginx/nginx.conf` to suit your specific requirements.
-
-- **Example**:
-
-  ```bash
-  assembler deploy --proxy --management --project my-repo
-  ```
 
 #### Certs Command
 
@@ -205,13 +183,6 @@ The `install` command installs the Assembler script by creating a symbolic link 
 
   ```bash
   assembler install
-  ```
-
-- **Example**:
-
-  ```bash
-  assembler install
-
   ```
 
 #### Uninstall Command
