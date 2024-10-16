@@ -1,6 +1,6 @@
-# Assembler Documentation
+# RelaySMS Assembler
 
-**Assembler** is a bash script designed to streamline the setup, cloning, and deployment of the RelaySMS units. It automates the process of bringing together all the components and starting the project.
+RelaySMS Assembler is a tool designed to streamline the setup, cloning, and deployment of the RelaySMS units. It automates the process of bringing together all the components and starting the project.
 
 ---
 
@@ -18,12 +18,12 @@
      - [Deploy Command](#deploy-command)
      - [Certs Command](#certs-command)
      - [Drop Command](#drop-command)
+     - [Install Command](#install-command)
+     - [Uninstall Command](#uninstall-command)
+     - [Update Command](#update-command)
 5. [Example Scenarios](#example-scenarios)
 6. [Contributions](#contributions)
-
----
-
-**Assembler** is a versatile tool for setting up and deploying the RelaySMS units. By automating the tasks of cloning repositories, configuring environments, and deploying services, Assembler ensures a smooth and efficient deployment process.
+7. [License](#license)
 
 ---
 
@@ -146,8 +146,8 @@ The `deploy` command is used to deploy the projects, optionally using a reverse 
 
 - **Options**:
 
-  - **`--proxy`**: Use a reverse proxy (Nginx).
-  - **`--management`**: Include management tools (Portainer).
+  - **`--no-proxy`**: Disable the use of a reverse proxy (Nginx).
+  - **`--no-management`**: Exclude management tools from the deployment.
   - **`--project PROJECT`**: (Optional) Specify a project to deploy.
 
 > [!NOTE]
@@ -197,6 +197,43 @@ The `drop` command stops and removes containers, with an optional flag to delete
   - **`--remove-images`**: Remove Docker images after stopping and removing containers.
   - **`--project PROJECT`**: (Optional) Specify a project to drop.
 
+#### Install Command
+
+The `install` command installs the Assembler script by creating a symbolic link in `/usr/local/bin`, allowing the script to be executed from any directory.
+
+- **Usage**:
+
+  ```bash
+  assembler install
+  ```
+
+- **Example**:
+
+  ```bash
+  assembler install
+
+  ```
+
+#### Uninstall Command
+
+The `uninstall` command removes the symbolic link created by the `install` command, effectively uninstalling the Assembler script.
+
+- **Usage**:
+
+  ```bash
+  assembler uninstall
+  ```
+
+#### Update Command
+
+The `update` command checks for the latest version of Assembler on GitHub and updates the script to the most recent version if available.
+
+- **Usage**:
+
+  ```bash
+  assembler update
+  ```
+
 ---
 
 ## Example Scenarios
@@ -218,17 +255,33 @@ Here are some example scenarios that demonstrate how to use Assembler:
 3. **Deploy all projects behind a reverse proxy**:
 
    ```bash
-   assembler deploy --proxy
+   assembler deploy
    ```
 
-4. **Deploy a specific project with management tools included**:
+4. **Deploy a specific project without a reverse proxy or management tools**:
 
    ```bash
-   assembler deploy --project my-repo --management
+   assembler deploy --no-proxy --no-management --project my-repo
+   ```
+
+5. **Stop and remove containers, including Docker images, for a specific project**:
+
+   ```bash
+   assembler drop --remove-images --project my-repo
    ```
 
 ---
 
-## Contributions
+## Contributing
 
-Contributions to the Assembler project are welcome! If you have any improvements or additional features to contribute, feel free to fork the repository and submit a pull request.
+To contribute:
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature-branch`.
+3. Commit your changes: `git commit -m 'Add a new feature'`.
+4. Push to the branch: `git push origin feature-branch`.
+5. Open a Pull Request.
+
+## License
+
+This project is licensed under the GNU General Public License (GPL). See the [LICENSE](LICENSE) file for details.

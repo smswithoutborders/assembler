@@ -1,19 +1,24 @@
 #!/bin/bash
+# This program is free software: you can redistribute it under the terms
+# of the GNU General Public License, v. 3.0. If a copy of the GNU General
+# Public License was not distributed with this file, see <https://www.gnu.org/licenses/>.
+
+SCRIPT_ROOT=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+PARENT_DIR=$(dirname "$SCRIPT_ROOT")
+. "${SCRIPT_ROOT}/common.sh" || exit 1
 
 if ! command -v git &>/dev/null; then
-    echo "Error: git is not installed. Please install git and try again."
+    error "git is not installed. Please install git and try again."
     exit 1
 fi
 
-BASE_DIR=$(dirname $(dirname "$(realpath "$0")"))
+load_env_from_file "$PARENT_DIR/.env.default"
 
-export $(grep -v '^#' $BASE_DIR/.env.default | xargs)
-
-if [ -f $BASE_DIR/.env ]; then
-    export $(grep -v '^#' $BASE_DIR/.env | xargs)
+if [ -f $PARENT_DIR/.env ]; then
+    load_env_from_file "$PARENT_DIR/.env"
 fi
 
-PROJECTS_DIR="$BASE_DIR/projects"
+PROJECTS_DIR="$PARENT_DIR/projects"
 
 clone_or_update_repo() {
     local repo_name=$1
@@ -22,32 +27,32 @@ clone_or_update_repo() {
     local repo_dir="$PROJECTS_DIR/$repo_name"
 
     if [ -d "$repo_dir" ]; then
-        echo "Updating repository $repo_name..."
+        info "Updating repository $repo_name..."
         if ! git -C "$repo_dir" pull; then
-            echo "Error: Failed to update repository $repo_name."
+            error "Failed to update repository $repo_name."
             exit 1
         fi
         if [ -n "$branch" ]; then
-            echo "Checking out branch $branch in repository $repo_name..."
+            info "Checking out branch $branch in repository $repo_name..."
             if ! git -C "$repo_dir" checkout "$branch"; then
-                echo "Error: Failed to checkout branch $branch in repository $repo_name."
+                error "Failed to checkout branch $branch in repository $repo_name."
                 exit 1
             fi
             if ! git -C "$repo_dir" pull origin "$branch"; then
-                echo "Error: Failed to pull branch $branch in repository $repo_name."
+                error "Failed to pull branch $branch in repository $repo_name."
                 exit 1
             fi
         fi
     else
-        echo "Cloning repository $repo_name..."
+        info "Cloning repository $repo_name..."
         if ! git clone "$repo_url" "$repo_dir"; then
-            echo "Error: Failed to clone repository $repo_name."
+            error "Failed to clone repository $repo_name."
             exit 1
         fi
         if [ -n "$branch" ]; then
-            echo "Checking out branch $branch in repository $repo_name..."
+            info "Checking out branch $branch in repository $repo_name..."
             if ! git -C "$repo_dir" checkout "$branch"; then
-                echo "Error: Failed to checkout branch $branch in repository $repo_name."
+                error "Failed to checkout branch $branch in repository $repo_name."
                 exit 1
             fi
         fi
@@ -70,7 +75,7 @@ while [[ "$1" =~ ^-- ]]; do
         shift
         ;;
     *)
-        echo "Error: Unknown option: $1"
+        error "Unknown option: $1"
         exit 1
         ;;
     esac
@@ -88,7 +93,7 @@ if [ -n "$TARGET_REPO" ]; then
         fi
     done
     if [ "$found" -eq 0 ]; then
-        echo "Error: Repository $TARGET_REPO not found in the configuration file."
+        error "Repository $TARGET_REPO not found in the configuration file."
         exit 1
     fi
 else
@@ -99,5 +104,5 @@ else
     done
 fi
 
-echo "Cloning completed successfully."
+success "Cloning completed successfully."
 exit 0
