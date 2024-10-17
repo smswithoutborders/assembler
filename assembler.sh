@@ -242,7 +242,8 @@ update)
     done
 
     if [ "$NO_VERSION_CHECK" = true ]; then
-        git pull origin $(git rev-parse --abbrev-ref HEAD) --quiet
+        git pull origin main --quiet
+        git checkout main --quiet
         success "Update complete (without version check)."
         exit 0
     fi
