@@ -26,6 +26,7 @@ show_help() {
     echo "  --letsencrypt DOMAIN  Specify the Let's Encrypt domain name (required for certs)"
     echo "  --destination DOMAIN  Specify the destination domain name (required for certs)"
     echo "  --remove-images       Remove Docker images after stopping and removing containers (optional for drop)"
+    echo "  --no-version-check    Skip the version comparison during the update (optional for update)"
 }
 
 if [ -z "$1" ]; then
@@ -223,10 +224,30 @@ uninstall)
     ;;
 update)
     VERSION_FILE="$SCRIPT_ROOT/VERSION"
+    NO_VERSION_CHECK=false
     CURRENT_VERSION=$(cat "$VERSION_FILE")
 
     info "Checking for updates..."
-    git fetch --tags
+
+    while [[ "$1" =~ ^-- ]]; do
+        case $1 in
+        --no-version-check)
+            NO_VERSION_CHECK=true
+            shift
+            ;;
+        *)
+            handle_error "Unknown option: $1 for update command."
+            ;;
+        esac
+    done
+
+    if [ "$NO_VERSION_CHECK" = true ]; then
+        git pull origin $(git rev-parse --abbrev-ref HEAD) --quiet
+        success "Update complete (without version check)."
+        exit 0
+    fi
+
+    git fetch --tags --quiet
 
     LATEST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
 
@@ -243,8 +264,7 @@ update)
         case "$choice" in
         y | Y)
             info "Updating to version $LATEST_VERSION..."
-            git fetch --tags
-            git checkout "$LATEST_VERSION"
+            git checkout "$LATEST_VERSION" --quiet
             success "Update successful. You are now on version $LATEST_VERSION."
             ;;
         n | N)

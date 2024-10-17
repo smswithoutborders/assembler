@@ -77,7 +77,7 @@ compare_versions() {
     local latest_version=$1
     local current_version=$2
 
-    if [ "$(printf '%s\n' "$current_version" "$latest_version" | sort -V | head -n1)" != "$current_version" ]; then
+    if [ "$(printf '%s\n' "$current_version" "$latest_version" | sort -V | head -n1)" = "$current_version" ] && [ "$current_version" != "$latest_version" ]; then
         return 0
     else
         return 1

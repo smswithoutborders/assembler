@@ -205,6 +205,10 @@ The `update` command checks for the latest version of Assembler on GitHub and up
   assembler update
   ```
 
+- **Options**:
+
+  - **`--no-version-check`**: Skip the version comparison during the update.
+
 ---
 
 ## Example Scenarios
