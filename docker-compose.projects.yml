@@ -1,4 +1,43 @@
 services:
+  bridge-server:
+    restart: unless-stopped
+    container_name: bridge-server
+    depends_on:
+      - vault
+    build:
+      context: ${BRIDGE_SERVER_PATH}
+      dockerfile: Dockerfile
+    links:
+      - vault:${VAULT_gRPC_HOST:?err}
+    volumes:
+      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
+    environment:
+      - GRPC_HOST=0.0.0.0
+      - GRPC_PORT=${BRIDGE_SERVER_gRPC_PORT:?err}
+      - GRPC_SSL_PORT=${BRIDGE_SERVER_gRPC_TLS_PORT:?err}
+
+      - SSL_CERTIFICATE_FILE=${SSL_CERTIFICATE_FILE:?err}
+      - SSL_CERTIFICATE_KEY_FILE=${SSL_CERTIFICATE_KEY_FILE:?err}
+
+      - VAULT_GRPC_HOST=${VAULT_gRPC_HOST:?err}
+      - VAULT_GRPC_PORT=${VAULT_gRPC_PORT:?err}
+      - VAULT_GRPC_SSL_PORT=${VAULT_gRPC_TLS_PORT:?err}
+      - VAULT_GRPC_INTERNAL_PORT=${VAULT_gRPC_INTERNAL_PORT:?err}
+      - VAULT_GRPC_INTERNAL_SSL_PORT=${VAULT_gRPC_TLS_INTERNAL_PORT:?err}
+
+      - SL_API_KEY=${SIMPLELOGIN_API_KEY:?err}
+      - SL_PRIMARY_EMAIL=${SIMPLELOGIN_PRIMARY_EMAIL:?err}
+      - SL_PRIMARY_DOMAIN=${SIMPLELOGIN_PRIMARY_DOMAIN:?err}
+
+      - BRIDGE_SMTP_SERVER=${BRIDGE_SERVER_SMTP_SERVER:?err}
+      - BRIDGE_SMTP_PORT=${BRIDGE_SERVER_SMTP_PORT:?err}
+      - BRIDGE_SMTP_USERNAME=${BRIDGE_SERVER_SMTP_USERNAME:?err}
+      - BRIDGE_SMTP_PASSWORD=${BRIDGE_SERVER_SMTP_PASSWORD:?err}
+
+      - LOG_LEVEL=${LOG_LEVEL}
+    networks:
+      - assembler_network
+
   vault:
     restart: unless-stopped
     container_name: vault
@@ -45,7 +84,8 @@ services:
 
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:?err}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:?err}
-      - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID}
+      - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID:?err}
+      - TWILIO_MESSAGING_SERVICE_SID=${TWILIO_MESSAGING_SERVICE_SID:?err}
       - MOCK_OTP=${MOCK_OTP}
 
       - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
@@ -56,6 +96,8 @@ services:
       - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
       - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
       - KEYSTORE_PATH=/usr/local/share/smswithoutborders/keystore
+
+      - LOG_LEVEL=${LOG_LEVEL}
     networks:
       - assembler_network
 
@@ -114,6 +156,7 @@ services:
         - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
     links:
       - publisher:${PUBLISHER_gRPC_HOST:?err}
+      - bridge-server:${BRIDGE_SERVER_gRPC_HOST:?err}
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
@@ -135,6 +178,10 @@ services:
       - PUBLISHER_GRPC_HOST=${PUBLISHER_gRPC_HOST:?err}
       - PUBLISHER_GRPC_PORT=${PUBLISHER_gRPC_PORT:?err}
       - PUBLISHER_GRPC_SSL_PORT=${PUBLISHER_gRPC_TLS_PORT:?err}
+
+      - BRIDGE_GRPC_HOST=${BRIDGE_SERVER_gRPC_HOST:?err}
+      - BRIDGE_GRPC_PORT=${BRIDGE_SERVER_gRPC_PORT:?err}
+      - BRIDGE_GRPC_SSL_PORT=${BRIDGE_SERVER_gRPC_TLS_PORT:?err}
 
       - MYSQL_HOST=database
       - MYSQL_USER=${MYSQL_USER:?err}
