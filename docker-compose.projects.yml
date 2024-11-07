@@ -303,6 +303,8 @@ services:
       - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
       - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
       - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
+
+      - SENTRY_DSN=${GLITCHTIP_RELAYSMS_DSN}
     networks:
       - assembler_network
 
