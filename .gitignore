@@ -1,3 +1,4 @@
 projects/
 .env
 nginx.conf
+venv

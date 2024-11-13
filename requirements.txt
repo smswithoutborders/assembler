@@ -1,0 +1,2 @@
+bump-my-version==0.28.1
+git-changelog==2.5.2
