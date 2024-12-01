@@ -27,10 +27,6 @@ services:
       - ${GATEWAY_SERVER_FTP_PORT:?err}:${GATEWAY_SERVER_FTP_PORT:?err}
       - ${GATEWAY_SERVER_FTP_PASSIVE_PORTS:?err}:${GATEWAY_SERVER_FTP_PASSIVE_PORTS:?err}
 
-  gateway-server-sync-socket:
-    ports:
-      - ${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}:${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}
-
   publisher:
     ports:
       - ${PUBLISHER_gRPC_PORT:?err}:${PUBLISHER_gRPC_PORT:?err}

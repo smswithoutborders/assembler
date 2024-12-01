@@ -187,7 +187,6 @@ services:
       - MYSQL_USER=${MYSQL_USER:?err}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:?err}
       - MYSQL_DATABASE=${MYSQL_DATABASE:?err}
-      - SOCK_PORT=${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}
       - RSA_PR_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
 
       - MYSQL_BE_HOST=database
@@ -236,26 +235,6 @@ services:
 
       - SHARED_KEY=/usr/local/share/smswithoutborders/sharedkey.key
       - HASHING_SALT=/usr/local/share/smswithoutborders/hashingsalt.key
-    networks:
-      - assembler_network
-
-  gateway-server-sync-socket:
-    restart: unless-stopped
-    container_name: gateway-server-sync-socket
-    build: ${GATEWAY_SERVER_PATH}/sockets/.
-    volumes:
-      - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
-    environment:
-      - HOST=${GATEWAY_SERVER_HTTP_HOST:?err}
-      - PORT=${GATEWAY_SERVER_SYNC_SOCKET_PORT:?err}
-
-      - GATEWAY_SERVER_HOST=${GATEWAY_SERVER_HTTP_HOST:?err}
-      - GATEWAY_SERVER_PORT=${GATEWAY_SERVER_HTTP_PORT:?err}
-      - GATEWAY_SERVER_SSL_PORT=${GATEWAY_SERVER_HTTPS_PORT:?err}
-
-      - SSL_CRT=${SSL_CERTIFICATE_FILE:?err}
-      - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
-      - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
     networks:
       - assembler_network
 
