@@ -361,6 +361,22 @@ services:
     networks:
       - assembler_network
 
+  telemetry-aggregator:
+    restart: unless-stopped
+    container_name: telemetry-aggregator
+    depends_on:
+      - vault
+    links:
+      - vault:${VAULT_HTTP_HOST:?err}
+    build:
+      context: ${TELEMETRY_AGGREGATOR_PATH}
+      dockerfile: Dockerfile
+    environment:
+      - RELAYSMS_VAULT_DOMAIN=https://${VAULT_HTTP_HOST:?err}
+      - LOG_LEVEL=${LOG_LEVEL}
+    networks:
+      - assembler_network
+
 volumes:
   db-data:
   rmq-data:
