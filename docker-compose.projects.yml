@@ -373,6 +373,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - RELAYSMS_VAULT_DOMAIN=https://${VAULT_HTTP_HOST:?err}
+      - RELAYSMS_VAULT_PORT=${VAULT_HTTPS_PORT:?err}
       - LOG_LEVEL=${LOG_LEVEL}
     networks:
       - assembler_network
