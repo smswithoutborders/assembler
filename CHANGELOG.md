@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.3.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.3.0) - 2024-12-09
+
+<small>[Compare with v0.2.0](https://github.com/smswithoutborders/assembler/compare/v0.2.0...v0.3.0)</small>
+
+### Features
+
+- add Telemetry Aggregator service. ([dd64475](https://github.com/smswithoutborders/assembler/commit/dd6447581375ecbad790a5efbd777efd8266de6e) by Promise Fru).
+
 ## [v0.2.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.2.0) - 2024-12-01
 
 <small>[Compare with v0.1.0](https://github.com/smswithoutborders/assembler/compare/v0.1.0...v0.2.0)</small>
