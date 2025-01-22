@@ -46,6 +46,7 @@ services:
       - MOCK_REPLY_SMS=${MOCK_REPLY_SMS:?err}
 
       - LOG_LEVEL=${LOG_LEVEL}
+      - SENTRY_DSN=${GLITCHTIP_RELAYSMS_DSN}
     networks:
       - assembler_network
 
