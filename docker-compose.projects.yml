@@ -68,6 +68,7 @@ services:
       - ${BROADCAST_WHITELIST:?err}:/usr/local/share/smswithoutborders/broadcast_list
       - telegram-data:/usr/local/share/smswithoutborders/telegram
       - keystore-data:/usr/local/share/smswithoutborders/keystore
+      - static-keystore-data:/usr/local/share/smswithoutborders/static_x25519_keystore
     environment:
       - HOST=${VAULT_HTTP_HOST:?err}
       - PORT=${VAULT_HTTP_PORT:?err}
@@ -108,6 +109,7 @@ services:
       - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
       - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
       - KEYSTORE_PATH=/usr/local/share/smswithoutborders/keystore
+      - STATIC_X25519_KEYSTORE_PATH=/usr/local/share/smswithoutborders/static_x25519_keystore
 
       - LOG_LEVEL=${LOG_LEVEL}
     networks:
@@ -394,6 +396,7 @@ volumes:
   db-data:
   rmq-data:
   keystore-data:
+  static-keystore-data:
   telegram-data:
   ftp-data:
 
