@@ -93,15 +93,8 @@ else
 fi
 
 target_name="${TARGET_REPO//_/\-}"
-if [ "$REBUILD" = true ]; then
-    REBUILD_CMD="$DOCKER_COMPOSE_CMD build --no-cache $target_name"
-    info "Rebuilding images without cache: $REBUILD_CMD"
-    if ! $REBUILD_CMD; then
-        error "Docker Compose rebuild failed."
-        exit 1
-    fi
-fi
 
+REBUILD_CMD="$DOCKER_COMPOSE_CMD build --no-cache $target_name"
 DEPLOY_CMD="$DOCKER_COMPOSE_CMD up --build --force-recreate -d --quiet-pull $target_name"
 
 project_dirs=()
@@ -118,6 +111,14 @@ else
     for repo in "${project_dirs[@]}"; do
         info "- $repo"
     done
+fi
+
+if [ "$REBUILD" = true ]; then
+    info "Running command: $REBUILD_CMD"
+    if ! $REBUILD_CMD; then
+        error "Docker Compose rebuild failed."
+        exit 1
+    fi
 fi
 
 info "Running command: $DEPLOY_CMD"
