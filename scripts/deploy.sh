@@ -28,6 +28,7 @@ fi
 USE_PROXY=false
 INCLUDE_MANAGEMENT=false
 TARGET_REPO=""
+REBUILD=false
 
 PROJECTS_DIR="$PARENT_DIR/projects"
 
@@ -49,6 +50,10 @@ while [[ "$1" =~ ^-- ]]; do
     --project)
         shift
         TARGET_REPO=$1
+        shift
+        ;;
+    --rebuild)
+        REBUILD=true
         shift
         ;;
     *)
@@ -87,7 +92,16 @@ else
     DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD -f $OVERRIDE_COMPOSE_FILE"
 fi
 
-target_name="${TARGET_REPO//_/-}"
+target_name="${TARGET_REPO//_/\-}"
+if [ "$REBUILD" = true ]; then
+    REBUILD_CMD="$DOCKER_COMPOSE_CMD build --no-cache $target_name"
+    info "Rebuilding images without cache: $REBUILD_CMD"
+    if ! $REBUILD_CMD; then
+        error "Docker Compose rebuild failed."
+        exit 1
+    fi
+fi
+
 DEPLOY_CMD="$DOCKER_COMPOSE_CMD up --build --force-recreate -d --quiet-pull $target_name"
 
 project_dirs=()

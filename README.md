@@ -143,6 +143,7 @@ The `deploy` command is used to deploy the projects, optionally using a reverse 
   - **`--no-proxy`**: Disable the use of a reverse proxy (Nginx).
   - **`--no-management`**: Exclude management tools from the deployment.
   - **`--project PROJECT`**: (Optional) Specify a project to deploy.
+  - **`--rebuild PROJECT`**: Force rebuild of images without cache.
 
 #### Certs Command
 

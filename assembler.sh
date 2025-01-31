@@ -23,6 +23,7 @@ show_help() {
     echo "  --project PROJECT     Specify a project to clone/update or deploy (optional for clone, deploy, drop)"
     echo "  --no-proxy            Disable reverse proxy (optional for deploy)"
     echo "  --no-management       Disable management tools (optional for deploy, drop)"
+    echo "  --rebuild             Force rebuild of images without cache (optional for deploy)"
     echo "  --letsencrypt DOMAIN  Specify the Let's Encrypt domain name (required for certs)"
     echo "  --destination DOMAIN  Specify the destination domain name (required for certs)"
     echo "  --remove-images       Remove Docker images after stopping and removing containers (optional for drop)"
@@ -87,6 +88,7 @@ deploy)
     PROXY_FLAG="--proxy"
     MANAGEMENT_FLAG="--management"
     TARGET_REPO=""
+    REBUILD_FLAG=""
 
     while [[ "$1" =~ ^-- ]]; do
         case $1 in
@@ -96,6 +98,10 @@ deploy)
             ;;
         --no-management)
             MANAGEMENT_FLAG=""
+            shift
+            ;;
+        --rebuild)
+            REBUILD_FLAG="--rebuild"
             shift
             ;;
         --project)
@@ -114,7 +120,7 @@ deploy)
 
     check_for_extra_arguments "$@"
 
-    $SCRIPT_ROOT/scripts/deploy.sh ${TARGET_REPO:+--project $TARGET_REPO} $PROXY_FLAG $MANAGEMENT_FLAG
+    $SCRIPT_ROOT/scripts/deploy.sh ${TARGET_REPO:+--project $TARGET_REPO} $PROXY_FLAG $MANAGEMENT_FLAG $REBUILD_FLAG
     ;;
 certs)
     LETSENCRYPT_DOMAIN=""
