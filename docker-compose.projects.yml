@@ -393,12 +393,15 @@ services:
       - vault
     links:
       - vault:${VAULT_HTTP_HOST:?err}
+      - publisher:${PUBLISHER_HTTP_HOST:?err}
     build:
       context: ${TELEMETRY_AGGREGATOR_PATH}
       dockerfile: Dockerfile
     environment:
       - RELAYSMS_VAULT_DOMAIN=https://${VAULT_HTTP_HOST:?err}
       - RELAYSMS_VAULT_PORT=${VAULT_HTTPS_PORT:?err}
+      - RELAYSMS_PUBLISHER_DOMAIN=https://${PUBLISHER_HTTP_HOST:?err}
+      - RELAYSMS_PUBLISHER_PORT=${PUBLISHER_HTTPS_PORT:?err}
       - LOG_LEVEL=${LOG_LEVEL}
     networks:
       - assembler_network
