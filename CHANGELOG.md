@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.4.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.4.0) - 2025-03-11
+
+<small>[Compare with v0.3.0](https://github.com/smswithoutborders/assembler/compare/v0.3.0...v0.4.0)</small>
+
+### Features
+
+- Add SMTP allowed email addresses configuration. ([9f47435](https://github.com/smswithoutborders/assembler/commit/9f4743502d94fb47fc3fec69907cab5df8f2547d) by Promise Fru).
+- Add config to disable bridge payloads over HTTP. ([994af89](https://github.com/smswithoutborders/assembler/commit/994af89abe9f29a264c000f01f193a513e06e4dc) by Promise Fru).
+- Configure aggregator to use publisher service. ([b453857](https://github.com/smswithoutborders/assembler/commit/b453857cd1a3674d0eec45d5767db1bfdef9b093) by Promise Fru).
+- Expose publisher service via HTTP. ([d49d023](https://github.com/smswithoutborders/assembler/commit/d49d023895e8a67a62c78c1b52de2de14b72c5dd) by Promise Fru).
+- Add mock delivery SMS support ([65b9938](https://github.com/smswithoutborders/assembler/commit/65b993848759cbf36223d4e21cdabc7a3fd39cf7) by Promise Fru).
+- Add rebuild flag to force image rebuilds. ([1ac2e32](https://github.com/smswithoutborders/assembler/commit/1ac2e3210146c011628b341517fbc9b657b9eb83) by Promise Fru).
+- Add static keystore volume. ([74fac3c](https://github.com/smswithoutborders/assembler/commit/74fac3c15482606264172f390fb51d69d99bfe3f) by Promise Fru).
+- Add Twilio integration to bridge_server. ([0800cc4](https://github.com/smswithoutborders/assembler/commit/0800cc48ed019f19e6158185c1e0e67d2c162709) by Promise Fru).
+- Add IMAP support to bridge server. ([c7dd7d6](https://github.com/smswithoutborders/assembler/commit/c7dd7d6def0794e42fafa42ce776578fefbeb47f) by Promise Fru).
+
+### Bug Fixes
+
+- Use HTTP for publisher connection. ([619e093](https://github.com/smswithoutborders/assembler/commit/619e0938457980d3772870f2c0b0b3050b3d9fc4) by Promise Fru).
+- export all service paths before using rebuild. ([4e8eeb0](https://github.com/smswithoutborders/assembler/commit/4e8eeb0cdeb5f7a6d345d580c13acf306ac4732f) by Promise Fru).
+
 ## [v0.3.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.3.0) - 2024-12-09
 
 <small>[Compare with v0.2.0](https://github.com/smswithoutborders/assembler/compare/v0.2.0...v0.3.0)</small>
