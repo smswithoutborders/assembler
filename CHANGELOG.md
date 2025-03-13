@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.4.1](https://github.com/smswithoutborders/assembler/releases/tag/v0.4.1) - 2025-03-13
+
+<small>[Compare with v0.4.0](https://github.com/smswithoutborders/assembler/compare/v0.4.0...v0.4.1)</small>
+
+### Features
+
+- Adds MySQL database connection to bridge service. ([34de936](https://github.com/smswithoutborders/assembler/commit/34de936ef9d9973c9b9808c2b6beb04aedbb93bf) by Promise Fru).
+
 ## [v0.4.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.4.0) - 2025-03-11
 
 <small>[Compare with v0.3.0](https://github.com/smswithoutborders/assembler/compare/v0.3.0...v0.4.0)</small>
