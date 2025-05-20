@@ -273,7 +273,9 @@ services:
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
-      - telegram-data:/usr/local/share/smswithoutborders/telegram
+      - adapters:/usr/local/share/smswithoutborders/adapters
+      - adapters-venv:/usr/local/share/smswithoutborders/adapters-venv
+      - adapters-assets:/usr/local/share/smswithoutborders/adapters-assets
     environment:
       - GRPC_HOST=0.0.0.0
       - GRPC_PORT=${PUBLISHER_gRPC_PORT:?err}
@@ -310,10 +312,9 @@ services:
       - RMQ_EXCHANGE=${RMQ_EXCHANGE:-staging-smswithoutborders-exchange}
       - RMQ_CONNECTION_NAME=${RMQ_CONNECTION_NAME:-staging-smswithoutborders-consumer}
 
-      - GMAIL_CREDENTIALS=/usr/local/share/smswithoutborders/gmail_credentials.json
-      - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
-      - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
-      - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
+      - PLATFORMS_ADAPTERS_DIR=/usr/local/share/smswithoutborders/adapters
+      - PLATFORMS_ADAPTERS_VENV_DIR=/usr/local/share/smswithoutborders/adapters-venv
+      - PLATFORMS_ADAPTERS_ASSETS_DIR=/usr/local/share/smswithoutborders/adapters-assets
 
       - SENTRY_DSN=${GLITCHTIP_RELAYSMS_DSN}
     networks:
@@ -358,7 +359,7 @@ services:
       - MARIADB_PASSWORD=${MYSQL_PASSWORD}
       - MARIADB_DATABASE=${MYSQL_DATABASE}
     healthcheck:
-      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       start_period: 10s
       interval: 10s
       timeout: 5s
@@ -383,7 +384,7 @@ services:
       - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.pem
       - rmq-data:/var/lib/rabbitmq/mnesia/
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -420,7 +421,6 @@ volumes:
   static-keystore-data:
   telegram-data:
   ftp-data:
-
 
 networks:
   assembler_network:
