@@ -421,6 +421,9 @@ volumes:
   static-keystore-data:
   telegram-data:
   ftp-data:
+  adapters:
+  adapters-venv:
+  adapters-assets:
 
 networks:
   assembler_network:
