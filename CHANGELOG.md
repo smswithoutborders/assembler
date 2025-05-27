@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.5.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.5.0) - 2025-05-27
+
+<small>[Compare with v0.4.1](https://github.com/smswithoutborders/assembler/compare/v0.4.1...v0.5.0)</small>
+
+### Features
+
+- Add new volumes for adapters in docker-compose ([b5cc6ef](https://github.com/smswithoutborders/assembler/commit/b5cc6ef6324153e1b8af9996991ffb124757d5e6) by Promise Fru).
+- Update volumes and environment variables for adapters in docker-compose ([cae7289](https://github.com/smswithoutborders/assembler/commit/cae7289cd955c31398d63eecaa59e874f4d09a32) by Promise Fru).
+
 ## [v0.4.1](https://github.com/smswithoutborders/assembler/releases/tag/v0.4.1) - 2025-03-13
 
 <small>[Compare with v0.4.0](https://github.com/smswithoutborders/assembler/compare/v0.4.0...v0.4.1)</small>
