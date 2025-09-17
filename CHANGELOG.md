@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.7.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.7.0) - 2025-09-17
+
+<small>[Compare with v0.6.0](https://github.com/smswithoutborders/assembler/compare/v0.6.0...v0.7.0)</small>
+
+### Features
+
+- Add QUEUEDROID environment variables to .env.example and docker-compose ([ad20cbd](https://github.com/smswithoutborders/assembler/commit/ad20cbd793c34d42bac326abb12b52cef8e816ad) by Promise Fru).
+
 ## [v0.6.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.6.0) - 2025-08-14
 
 <small>[Compare with v0.5.0](https://github.com/smswithoutborders/assembler/compare/v0.5.0...v0.6.0)</small>
