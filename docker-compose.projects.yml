@@ -168,8 +168,6 @@ services:
     depends_on:
       database:
         condition: service_healthy
-      rmq:
-        condition: service_healthy
       publisher:
         condition: service_started
     build:
@@ -222,18 +220,7 @@ services:
       - MYSQL_BE_PASSWORD=${MYSQL_PASSWORD:?err}
       - MYSQL_BE_DATABASE=${MYSQL_DATABASE:?err}
 
-      - RMQ_HOST=${RMQ_HOST:-rmq}
-      - RMQ_SSL=false
-
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-guest}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS:-guest}
-
       - PUBLISHER_ENCRYPTION_KEY=${PUBLISHER_ENCRYPTION_KEY:?err}
-
-      - RMQ_ROUTING_KEY=${RMQ_ROUTING_KEY:-staging-smswithoutborders-routing-key}
-      - RMQ_EXCHANGE=${RMQ_EXCHANGE:-staging-smswithoutborders-exchange}
-      - RMQ_CONNECTION_NAME=${RMQ_CONNECTION_NAME:-staging-smswithoutborders-publisher}
-      - RMQ_QUEUE_NAME=${RMQ_QUEUE_NAME:-staging-smswithoutborders-queue}
 
       - IMAP_SERVER=${GATEWAY_SERVER_IMAP_SERVER:?err}
       - IMAP_PORT=${GATEWAY_SERVER_IMAP_PORT:-993}
@@ -271,9 +258,6 @@ services:
   publisher:
     restart: unless-stopped
     container_name: publisher
-    depends_on:
-      rmq:
-        condition: service_healthy
     build:
       context: ${PUBLISHER_PATH}
       dockerfile: Dockerfile
@@ -316,14 +300,6 @@ services:
       - VAULT_GRPC_INTERNAL_SSL_PORT=${VAULT_gRPC_TLS_INTERNAL_PORT:?err}
 
       - PUBLISHER_DECRYPTION_KEY=${PUBLISHER_ENCRYPTION_KEY:?err}
-
-      - RMQ_USER=${RABBITMQ_DEFAULT_USER:-guest}
-      - RMQ_PASSWORD=${RABBITMQ_DEFAULT_PASS:-guest}
-      - RMQ_HOST=${RMQ_HOST:-rmq}
-      - RMQ_QUEUE_NAME=${RMQ_QUEUE_NAME:-staging-smswithoutborders-queue}
-      - RMQ_ROUTING_KEY=${RMQ_ROUTING_KEY:-staging-smswithoutborders-routing-key}
-      - RMQ_EXCHANGE=${RMQ_EXCHANGE:-staging-smswithoutborders-exchange}
-      - RMQ_CONNECTION_NAME=${RMQ_CONNECTION_NAME:-staging-smswithoutborders-consumer}
 
       - PLATFORMS_ADAPTERS_DIR=/usr/local/share/smswithoutborders/adapters
       - PLATFORMS_ADAPTERS_VENV_DIR=/usr/local/share/smswithoutborders/adapters-venv
@@ -380,33 +356,6 @@ services:
     networks:
       - assembler_network
 
-  rmq:
-    restart: unless-stopped
-    container_name: rmq
-    hostname: rmq-server
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
-    build:
-      context: ${RMQ_PATH}
-      dockerfile: Dockerfile
-    volumes:
-      - ${SSL_CERTIFICATE_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.crt
-      - ${SSL_CERTIFICATE_KEY_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.key
-      - ${SSL_CERTIFICATE_CHAIN_FILE:?err}:/etc/ssl/certs/smswithoutborders/server.pem
-      - rmq-data:/var/lib/rabbitmq/mnesia/
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:15672"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-guest}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS:-guest}
-    networks:
-      - assembler_network
-
   telemetry-aggregator:
     restart: unless-stopped
     container_name: telemetry-aggregator
@@ -429,7 +378,6 @@ services:
 
 volumes:
   db-data:
-  rmq-data:
   keystore-data:
   static-keystore-data:
   telegram-data:
