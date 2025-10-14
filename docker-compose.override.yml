@@ -36,7 +36,3 @@ services:
     ports:
       - ${GATEWAY_CLIENT_REMOTE_HTTP_PORT:?err}:${GATEWAY_CLIENT_REMOTE_HTTP_PORT:?err}
       - ${GATEWAY_CLIENT_REMOTE_HTTPS_PORT:?err}:${GATEWAY_CLIENT_REMOTE_HTTPS_PORT:?err}
-
-  rmq:
-    ports:
-      - "15672:15672"
