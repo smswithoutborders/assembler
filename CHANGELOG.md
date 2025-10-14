@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.8.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.8.0) - 2025-10-14
+
+<small>[Compare with v0.7.0](https://github.com/smswithoutborders/assembler/compare/v0.7.0...v0.8.0)</small>
+
+### Code Refactoring
+
+- remove RabbitMQ configuration from .env.default and docker-compose.override.yml ([31a7477](https://github.com/smswithoutborders/assembler/commit/31a7477ef7d66058a21a6f6b820e3b87304807ce) by Promise Fru).
+- remove RabbitMQ service and related environment variables from docker-compose ([babf9ab](https://github.com/smswithoutborders/assembler/commit/babf9abeffbbbbdd157cd27679eb7886d69de06e) by Promise Fru).
+
 ## [v0.7.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.7.0) - 2025-09-17
 
 <small>[Compare with v0.6.0](https://github.com/smswithoutborders/assembler/compare/v0.6.0...v0.7.0)</small>
