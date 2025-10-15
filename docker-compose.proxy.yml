@@ -4,8 +4,16 @@ services:
     image: nginx:latest
     container_name: nginx
     depends_on:
-      - homepage
-      - gateway-server
+      homepage:
+        condition: service_started
+      gateway-server:
+        condition: service_started
+      bridge-server:
+        condition: service_started
+      vault:
+        condition: service_started
+      publisher:
+        condition: service_started
     ports:
       - "80:80"
       - "443:443"

@@ -15,11 +15,6 @@ services:
         - SWOB_BE_HOST=https://${VAULT_HTTP_HOST}:${VAULT_HTTPS_PORT}
         - SWOB_GS_HOST=https://${GATEWAY_SERVER_HTTP_HOST}:${GATEWAY_SERVER_HTTPS_PORT}
 
-  telemetry-homepage:
-    ports:
-      - ${TELEMETRY_HOMEPAGE_HTTP_PORT:?err}:80
-      - ${TELEMETRY_HOMEPAGE_HTTPS_PORT:?err}:443
-
   gateway-server:
     ports:
       - ${GATEWAY_SERVER_HTTP_PORT:?err}:${GATEWAY_SERVER_HTTP_PORT:?err}
