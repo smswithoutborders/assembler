@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.9.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.9.0) - 2025-10-15
+
+<small>[Compare with v0.8.0](https://github.com/smswithoutborders/assembler/compare/v0.8.0...v0.9.0)</small>
+
+### Bug Fixes
+
+- add LOG_LEVEL environment variable to services ([f54e62d](https://github.com/smswithoutborders/assembler/commit/f54e62d1ae7f49227f63e67673a53634dd1c047c) by Promise Fru).
+
+### Code Refactoring
+
+- remove telemetry homepage service and related configurations ([10587f9](https://github.com/smswithoutborders/assembler/commit/10587f983f550eec9364d3ade70bc0151a939567) by Promise Fru).
+
 ## [v0.8.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.8.0) - 2025-10-14
 
 <small>[Compare with v0.7.0](https://github.com/smswithoutborders/assembler/compare/v0.7.0...v0.8.0)</small>
