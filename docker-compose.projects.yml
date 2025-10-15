@@ -236,6 +236,8 @@ services:
 
       - SHARED_KEY=/usr/local/share/smswithoutborders/sharedkey.key
       - HASHING_SALT=/usr/local/share/smswithoutborders/hashingsalt.key
+
+      - LOG_LEVEL=${LOG_LEVEL}
     networks:
       - assembler_network
 
@@ -290,6 +292,7 @@ services:
       - PLATFORMS_ADAPTERS_ASSETS_DIR=/usr/local/share/smswithoutborders/adapters-assets
 
       - SENTRY_DSN=${GLITCHTIP_RELAYSMS_DSN}
+      - LOG_LEVEL=${LOG_LEVEL}
     networks:
       - assembler_network
 
