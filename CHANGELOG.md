@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.10.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.10.0) - 2025-10-21
+
+<small>[Compare with v0.9.0](https://github.com/smswithoutborders/assembler/compare/v0.9.0...v0.10.0)</small>
+
+### Features
+
+- add SMTP configuration variables for gateway client remote ([443259f](https://github.com/smswithoutborders/assembler/commit/443259f4cf788da686160a3ff90e27731c6c528e) by Promise Fru).
+
 ## [v0.9.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.9.0) - 2025-10-15
 
 <small>[Compare with v0.8.0](https://github.com/smswithoutborders/assembler/compare/v0.8.0...v0.9.0)</small>
