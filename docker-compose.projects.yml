@@ -115,9 +115,8 @@ services:
       - QUEUEDROID_SUPPORTED_VERIFICATION_REGION_CODES=${QUEUEDROID_SUPPORTED_VERIFICATION_REGION_CODES}
       - MOCK_OTP=${MOCK_OTP}
 
-      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
-      - RECAPTCHA_ENABLED=${RECAPTCHA_ENABLED}
-      - RECAPTCHA_MIN_SCORE=${RECAPTCHA_MIN_SCORE}
+      - RECAPTCHA_ENABLED
+      - LIBRE_CAPTCHA_URL=http://lc-core:8888
 
       - GMAIL_CREDENTIALS=/usr/local/share/smswithoutborders/gmail_credentials.json
       - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
