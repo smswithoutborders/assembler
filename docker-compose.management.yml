@@ -94,20 +94,10 @@ services:
     networks:
       - assembler_network
 
-  lc-core:
-    container_name: "lc-core"
-    restart: unless-stopped
-    image: librecaptcha/lc-core:latest
-    volumes:
-      - lc-data:/lc-core/data
-    networks:
-      - assembler_network
-
 volumes:
   database-backup-data:
   postgres-db-data:
   glitchtip-uploads:
-  lc-data:
 
 networks:
   assembler_network:
