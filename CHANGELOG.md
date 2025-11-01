@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.11.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.11.0) - 2025-11-01
+
+<small>[Compare with v0.10.0](https://github.com/smswithoutborders/assembler/compare/v0.10.0...v0.11.0)</small>
+
+### Features
+
+- add lc-core service ([d3ffd22](https://github.com/smswithoutborders/assembler/commit/d3ffd22a25293eb37646b1d57531f6b0e420f3a2) by Promise Fru).
+- set reCAPTCHA environment variables with values in docker-compose ([145c536](https://github.com/smswithoutborders/assembler/commit/145c536018083d0a4a10a7fd4c2beda7db9d9640) by Promise Fru).
+- remove deprecated reCAPTCHA environment variables from docker-compose ([5e7cfa6](https://github.com/smswithoutborders/assembler/commit/5e7cfa6a62dbb5613ac9ea868401c421394d22b6) by Promise Fru).
+- set environment variables for reCAPTCHA configuration in docker-compose ([3459f7a](https://github.com/smswithoutborders/assembler/commit/3459f7a6cd1186dfc7a7f60bb9980668b36adb80) by Promise Fru).
+- update environment variables for reCAPTCHA configuration ([886a500](https://github.com/smswithoutborders/assembler/commit/886a500fc4b0cff61474cef77f30ac6dbaf67eab) by Promise Fru).
+
+### Code Refactoring
+
+- update captcha env vars and remove lc-core ([1d98440](https://github.com/smswithoutborders/assembler/commit/1d98440168dafda696425322db728cc0b212cd6e) by Promise Fru).
+
 ## [v0.10.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.10.0) - 2025-10-21
 
 <small>[Compare with v0.9.0](https://github.com/smswithoutborders/assembler/compare/v0.9.0...v0.10.0)</small>
