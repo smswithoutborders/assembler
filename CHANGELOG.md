@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.12.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.12.0) - 2025-11-03
+
+<small>[Compare with v0.11.0](https://github.com/smswithoutborders/assembler/compare/v0.11.0...v0.12.0)</small>
+
+### Features
+
+- add OTP config variables ([b4921a5](https://github.com/smswithoutborders/assembler/commit/b4921a5976727732abf2db672d73f1882eeb229e) by Promise Fru).
+
+### Bug Fixes
+
+- update env var references in compose file ([9010aff](https://github.com/smswithoutborders/assembler/commit/9010afff89a9b1d3539405f2eb3411a20d7271b9) by Promise Fru).
+
 ## [v0.11.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.11.0) - 2025-11-01
 
 <small>[Compare with v0.10.0](https://github.com/smswithoutborders/assembler/compare/v0.10.0...v0.11.0)</small>
