@@ -128,6 +128,20 @@ services:
       - KEYSTORE_PATH=/usr/local/share/smswithoutborders/keystore
       - STATIC_X25519_KEYSTORE_PATH=/usr/local/share/smswithoutborders/static_x25519_keystore
 
+      - EMAIL_SERVICE_URL
+      - EMAIL_SERVICE_API_KEY
+      - EMAIL_SUBJECT
+      - EMAIL_ORGANIZATION_NAME
+      - EMAIL_WEBSITE_URL
+      - EMAIL_LOGO_URL
+      - EMAIL_PROJECT_NAME
+      - EMAIL_ABUSE_EMAIL
+      - EMAIL_SUPPORT_EMAIL
+      - EMAIL_ALIAS_PREFIX
+      - EMAIL_ALIAS_DOMAIN
+      - EMAIL_SENDER_MAILBOX
+      - EMAIL_OTP_EXPIRY_MINUTES
+
       - LOG_LEVEL=${LOG_LEVEL}
     networks:
       - assembler_network
