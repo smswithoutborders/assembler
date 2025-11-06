@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.13.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.13.0) - 2025-11-06
+
+<small>[Compare with v0.12.0](https://github.com/smswithoutborders/assembler/compare/v0.12.0...v0.13.0)</small>
+
+### Features
+
+- add email service configuration variables to .env.example and docker-compose ([8558358](https://github.com/smswithoutborders/assembler/commit/85583589860b5f190e82bd9b5ca22a52e4429dce) by Promise Fru).
+
 ## [v0.12.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.12.0) - 2025-11-03
 
 <small>[Compare with v0.11.0](https://github.com/smswithoutborders/assembler/compare/v0.11.0...v0.12.0)</small>
