@@ -72,10 +72,9 @@ services:
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
-      - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
-      - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
-      - ${BROADCAST_WHITELIST:?err}:/usr/local/share/smswithoutborders/broadcast_list
-      - telegram-data:/usr/local/share/smswithoutborders/telegram
+      - ${DATA_ENCRYPTION_KEY_PRIMARY_FILE:?err}:/usr/local/share/smswithoutborders/dek_primary.key
+      - ${DATA_ENCRYPTION_KEY_SECONDARY_FILE:?err}:/usr/local/share/smswithoutborders/dek_secondary.key
+      - ${HMAC_KEY_FILE:?err}:/usr/local/share/smswithoutborders/hmac.key
       - keystore-data:/usr/local/share/smswithoutborders/keystore
       - static-keystore-data:/usr/local/share/smswithoutborders/static_x25519_keystore
     environment:
@@ -95,9 +94,9 @@ services:
       - SSL_KEY=${SSL_CERTIFICATE_KEY_FILE:?err}
       - SSL_PEM=${SSL_CERTIFICATE_CHAIN_FILE:?err}
 
-      - SHARED_KEY=/usr/local/share/smswithoutborders/sharedkey.key
-      - HASHING_SALT=/usr/local/share/smswithoutborders/hashingsalt.key
-      - BROADCAST_WHITELIST=/usr/local/share/smswithoutborders/broadcast_list
+      - DATA_ENCRYPTION_KEY_PRIMARY_FILE=/usr/local/share/smswithoutborders/dek_primary.key
+      - DATA_ENCRYPTION_KEY_SECONDARY_FILE=/usr/local/share/smswithoutborders/dek_secondary.key
+      - HMAC_KEY_FILE=/usr/local/share/smswithoutborders/hmac.key
 
       - MYSQL_HOST=database
       - MYSQL_USER
@@ -196,8 +195,8 @@ services:
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
       - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
-      - ${SHARED_KEY:?err}:/usr/local/share/smswithoutborders/sharedkey.key
-      - ${HASHING_SALT:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
+      - ${DATA_ENCRYPTION_KEY_PRIMARY_FILE:?err}:/usr/local/share/smswithoutborders/sharedkey.key
+      - ${HMAC_KEY_FILE:?err}:/usr/local/share/smswithoutborders/hashingsalt.key
       - telegram-data:/usr/local/share/smswithoutborders/telegram
       - ftp-data:/usr/local/share/smswithoutborders/ftp
     environment:
