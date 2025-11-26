@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.16.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.16.0) - 2025-11-26
+
+<small>[Compare with v0.15.0](https://github.com/smswithoutborders/assembler/compare/v0.15.0...v0.16.0)</small>
+
+### Features
+
+- add OTP rate limit env vars and cleanup volumes ([1e59fbe](https://github.com/smswithoutborders/assembler/commit/1e59fbe325353c9a1cc8d617bdd7892b7f2ed2fb) by Promise Fru).
+
 ## [v0.15.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.15.0) - 2025-11-25
 
 <small>[Compare with v0.14.0](https://github.com/smswithoutborders/assembler/compare/v0.14.0...v0.15.0)</small>
