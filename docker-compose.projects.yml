@@ -71,7 +71,6 @@ services:
       target: production
     volumes:
       - ${SSL_CERTIFICATES_PATH:?err}:${SSL_CERTIFICATES_PATH}
-      - ${THIRD_PARTY_CREDENTIALS_PATH:?err}:/usr/local/share/smswithoutborders
       - ${DATA_ENCRYPTION_KEY_PRIMARY_FILE:?err}:/usr/local/share/smswithoutborders/dek_primary.key
       - ${DATA_ENCRYPTION_KEY_SECONDARY_FILE:?err}:/usr/local/share/smswithoutborders/dek_secondary.key
       - ${HMAC_KEY_FILE:?err}:/usr/local/share/smswithoutborders/hmac.key
@@ -114,6 +113,19 @@ services:
       - QUEUEDROID_SUPPORTED_VERIFICATION_REGION_CODES
       - MOCK_OTP
 
+      - OTP_MAX_REQUESTS
+      - OTP_MAX_VERIFY_ATTEMPTS
+      - OTP_RATE_LIMIT_WINDOW_1_DURATION
+      - OTP_RATE_LIMIT_WINDOW_1_COUNT
+      - OTP_RATE_LIMIT_WINDOW_2_DURATION
+      - OTP_RATE_LIMIT_WINDOW_2_COUNT
+      - OTP_RATE_LIMIT_WINDOW_3_DURATION
+      - OTP_RATE_LIMIT_WINDOW_3_COUNT
+      - OTP_RATE_LIMIT_WINDOW_4_DURATION
+      - OTP_RATE_LIMIT_WINDOW_4_COUNT
+      - OTP_RATE_LIMIT_WINDOW_5_DURATION
+      - OTP_RATE_LIMIT_WINDOW_5_COUNT
+
       - SMS_OTP_ENABLED
       - SMS_OTP_ALLOWED_COUNTRIES
       - SMS_OTP_AUTH_ENABLED
@@ -129,10 +141,6 @@ services:
       - CAPTCHA_SECRET_KEY
       - CAPTCHA_SERVER_URL
 
-      - GMAIL_CREDENTIALS=/usr/local/share/smswithoutborders/gmail_credentials.json
-      - TWITTER_CREDENTIALS=/usr/local/share/smswithoutborders/twitter_credentials.json
-      - TELEGRAM_CREDENTIALS=/usr/local/share/smswithoutborders/telegram_credentials.json
-      - TELEGRAM_RECORDS=/usr/local/share/smswithoutborders/telegram
       - KEYSTORE_PATH=/usr/local/share/smswithoutborders/keystore
       - STATIC_X25519_KEYSTORE_PATH=/usr/local/share/smswithoutborders/static_x25519_keystore
 
