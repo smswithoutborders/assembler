@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.17.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.17.0) - 2025-12-10
+
+<small>[Compare with v0.16.0](https://github.com/smswithoutborders/assembler/compare/v0.16.0...v0.17.0)</small>
+
+### Features
+
+- add Argon2 and pepper env variables ([e028a15](https://github.com/smswithoutborders/assembler/commit/e028a155d3b273f3dab3637cbf17c6f969784b6d) by Promise Fru).
+
 ## [v0.16.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.16.0) - 2025-11-26
 
 <small>[Compare with v0.15.0](https://github.com/smswithoutborders/assembler/compare/v0.15.0...v0.16.0)</small>
