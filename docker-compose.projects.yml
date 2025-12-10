@@ -74,6 +74,7 @@ services:
       - ${DATA_ENCRYPTION_KEY_PRIMARY_FILE:?err}:/usr/local/share/smswithoutborders/dek_primary.key
       - ${DATA_ENCRYPTION_KEY_SECONDARY_FILE:?err}:/usr/local/share/smswithoutborders/dek_secondary.key
       - ${HMAC_KEY_FILE:?err}:/usr/local/share/smswithoutborders/hmac.key
+      - ${PEPPER_FILE:?err}:/usr/local/share/smswithoutborders/pepper.key
       - keystore-data:/usr/local/share/smswithoutborders/keystore
       - static-keystore-data:/usr/local/share/smswithoutborders/static_x25519_keystore
     environment:
@@ -96,6 +97,13 @@ services:
       - DATA_ENCRYPTION_KEY_PRIMARY_FILE=/usr/local/share/smswithoutborders/dek_primary.key
       - DATA_ENCRYPTION_KEY_SECONDARY_FILE=/usr/local/share/smswithoutborders/dek_secondary.key
       - HMAC_KEY_FILE=/usr/local/share/smswithoutborders/hmac.key
+      - PEPPER_FILE=/usr/local/share/smswithoutborders/pepper.key
+
+      - ARGON2_TIME_COST
+      - ARGON2_MEMORY_COST
+      - ARGON2_PARALLELISM
+      - ARGON2_HASH_LENGTH
+      - ARGON2_SALT_LENGTH
 
       - MYSQL_HOST=database
       - MYSQL_USER
