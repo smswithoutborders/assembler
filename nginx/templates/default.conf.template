@@ -85,7 +85,11 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    location ~ ^/vault\.v[12]\.Entity$ {
+    location /vault.v1.Entity {
+        grpc_pass grpcs://vault:${VAULT_gRPC_TLS_PORT};
+    }
+
+    location /vault.v2.Entity {
         grpc_pass grpcs://vault:${VAULT_gRPC_TLS_PORT};
     }
 
@@ -161,7 +165,11 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
     
-    location ~ ^/publisher\.v[12]\.Publisher$ {
+    location /publisher.v1.Publisher {
+        grpc_pass grpcs://publisher:${PUBLISHER_gRPC_TLS_PORT};
+    }
+
+    location /publisher.v2.Publisher {
         grpc_pass grpcs://publisher:${PUBLISHER_gRPC_TLS_PORT};
     }
 
