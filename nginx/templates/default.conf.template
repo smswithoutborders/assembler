@@ -161,7 +161,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
     
-    location /publisher.v1.Publisher {
+    location ~ ^/publisher\.v[12]\.Publisher$ {
         grpc_pass grpcs://publisher:${PUBLISHER_gRPC_TLS_PORT};
     }
 
