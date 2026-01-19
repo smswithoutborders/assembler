@@ -85,7 +85,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    location /vault.v1.Entity {
+    location ~ ^/vault\.v[12]\.Entity$ {
         grpc_pass grpcs://vault:${VAULT_gRPC_TLS_PORT};
     }
 
