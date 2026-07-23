@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.17.1](https://github.com/smswithoutborders/assembler/releases/tag/v0.17.1) - 2026-07-23
+
+<small>[Compare with v0.17.0](https://github.com/smswithoutborders/assembler/compare/v0.17.0...v0.17.1)</small>
+
+### Features
+
+- add gateway staging host redirect ([eddce69](https://github.com/smswithoutborders/assembler/commit/eddce6989206628a4159586b9953de279b9b6b1d) by Promise Fru).
+- split grpc locations for vault and publisher ([b804329](https://github.com/smswithoutborders/assembler/commit/b8043295c784e5147dc1fea76f9d1d461326f970) by Promise Fru).
+- add SIGNATURE_KEY_FILE env and mount ([699b145](https://github.com/smswithoutborders/assembler/commit/699b14548ad383f41f647101b204e0c48a9dd634) by Promise Fru).
+
+### Bug Fixes
+
+- support both v1 and v2 Publisher gRPC routes ([1f52df1](https://github.com/smswithoutborders/assembler/commit/1f52df1cfff4588f12d7f843b517dac0adea4b71) by Promise Fru).
+- support both v1 and v2 Entity gRPC endpoints ([8dea134](https://github.com/smswithoutborders/assembler/commit/8dea1343dbe88dda7d8341f1f155a3a0c9a393f1) by Promise Fru).
+
 ## [v0.17.0](https://github.com/smswithoutborders/assembler/releases/tag/v0.17.0) - 2025-12-10
 
 <small>[Compare with v0.16.0](https://github.com/smswithoutborders/assembler/compare/v0.16.0...v0.17.0)</small>
