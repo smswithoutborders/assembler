@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.17.3](https://github.com/smswithoutborders/assembler/releases/tag/v0.17.3) - 2026-07-23
+
+<small>[Compare with v0.17.2](https://github.com/smswithoutborders/assembler/compare/v0.17.2...v0.17.3)</small>
+
+### Bug Fixes
+
+- proxy staging server traffic instead of redirect ([b7bf011](https://github.com/smswithoutborders/assembler/commit/b7bf011587cbba1b817835e2ff6decfaf694f77a) by Promise Fru).
+
 ## [v0.17.2](https://github.com/smswithoutborders/assembler/releases/tag/v0.17.2) - 2026-07-23
 
 <small>[Compare with v0.17.1](https://github.com/smswithoutborders/assembler/compare/v0.17.1...v0.17.2)</small>
