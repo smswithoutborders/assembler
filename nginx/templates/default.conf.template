@@ -121,6 +121,18 @@ server {
     include /etc/nginx/block-exploits.conf;
 }
 
+# Staging (Canonical Redirect Block)
+server {
+    listen 443 ssl;
+    server_name ${GATEWAY_SERVER_STAGING_HTTP_HOST};
+
+    ssl_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
+    ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
+
+    return 301 https://${GATEWAY_SERVER_HTTP_HOST}$request_uri;
+}
+
 server {
     listen 443 ssl;
     server_name ${GATEWAY_SERVER_HTTP_HOST};
