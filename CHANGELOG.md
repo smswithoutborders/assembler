@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v0.17.2](https://github.com/smswithoutborders/assembler/releases/tag/v0.17.2) - 2026-07-23
+
+<small>[Compare with v0.17.1](https://github.com/smswithoutborders/assembler/compare/v0.17.1...v0.17.2)</small>
+
+### Bug Fixes
+
+- remove signature key env var ([7178bc1](https://github.com/smswithoutborders/assembler/commit/7178bc164d9df5da1cf52cb2d5721c5949c9c43b) by Promise Fru).
+
 ## [v0.17.1](https://github.com/smswithoutborders/assembler/releases/tag/v0.17.1) - 2026-07-23
 
 <small>[Compare with v0.17.0](https://github.com/smswithoutborders/assembler/compare/v0.17.0...v0.17.1)</small>
