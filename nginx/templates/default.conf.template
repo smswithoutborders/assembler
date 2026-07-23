@@ -121,7 +121,6 @@ server {
     include /etc/nginx/block-exploits.conf;
 }
 
-# Staging (Canonical Redirect Block)
 server {
     listen 443 ssl;
     server_name ${GATEWAY_SERVER_STAGING_HTTP_HOST};
@@ -130,7 +129,17 @@ server {
     ssl_certificate_key /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/privkey.pem;
     ssl_trusted_certificate /etc/nginx/certs/${HOMEPAGE_HTTP_HOST}/chain.pem;
 
-    return 301 https://${GATEWAY_SERVER_HTTP_HOST}$request_uri;
+    include /etc/nginx/security.conf;
+
+    location / {
+        proxy_pass https://gateway-server:${GATEWAY_SERVER_HTTPS_PORT};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    include /etc/nginx/block-exploits.conf;
 }
 
 server {
